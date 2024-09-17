@@ -10,7 +10,7 @@ Borrowers are incentivized with Compound-V token.
 
 The utility of Compound-V token is a share of protocol revenue.
 
-The project is implemented using ERC-4626 vaults and predicates.
+The project is implemented using ERC-4626 vaults, predicates and envio indexer.
 
 ## TODO
 
