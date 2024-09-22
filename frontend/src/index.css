@@ -1,3 +1,17 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+    background-color: #08131f;
+    color: white;
+    font-size: 14px;
+}
+
+th, td {
+    padding: 4px 16px;
+}
+
+tbody{
+    background-color: #10263e;
+}
