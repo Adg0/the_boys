@@ -1,0 +1,7 @@
+[project]
+authors = ["addis"]
+entry = "main.sw"
+license = "Apache-2.0"
+name = "lending-market"
+
+[dependencies]
