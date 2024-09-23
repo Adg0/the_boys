@@ -2,16 +2,20 @@ import './App.css';
 import "./components/Home";
 import Home from './components/Home';
 
-import { BrowserRouter as Router, Link } from "react-router-dom";
+import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
+
 import Navbar from './components/Navbar';
+import Leaderboard from './components/Leaderboard';
 
 function App() {
     return(
         <Router>
             <Navbar />
-            <Link to="/" >
-                <Home />
-            </Link>
+            <Routes>
+
+                <Route path="/" element={<Home />} />
+                <Route path="/leaderboard" element={<Leaderboard />} />
+            </Routes>
         </Router>
     )
 }

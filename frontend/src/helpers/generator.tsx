@@ -22,7 +22,7 @@ const projects = [
     return `$${(Math.round(money / 10_000) / 100).toLocaleString()}M`;
   };
 
-  export function generateRows(size=10){
+  export function generateMarketRows(size=10){
     const rows: string[][] = [];
     for(let i = 0; i < size; i++){
         const row: string[] = [];
@@ -37,5 +37,56 @@ const projects = [
 
         rows.push(row);
     }
+    return rows;
+  };
+
+  const generateFormattedWalletAddress = () => {
+    const randomHex = () => Math.floor(Math.random() * 16).toString(16);
+    let start = '0x';
+
+    // Generate the first 4 characters
+    for (let i = 0; i < 4; i++) {
+        start += randomHex();
+    }
+
+    // Generate the last 4 characters
+    let end = '';
+    for (let i = 0; i < 4; i++) {
+        end += randomHex();
+    }
+
+    return `${start}...${end}`;
+  };
+
+  export function generateVaultRows(size = 10){
+    const rows: string[][] = [];
+
+    for(let i = 0; i < size; i++){
+      const row: string[] = [];
+
+      row.push(`${i + 1}`);
+      row.push(generateFormattedWalletAddress());
+      row.push(`${Math.ceil(Math.random() * 10)}`);
+      row.push(`${Math.random() * 10}`.substring(0, 6));
+
+      rows.push(row);
+    }
+
+    return rows;
+  };
+
+  export function generateUsersRows(size = 10){
+    const rows: string[][] = [];
+
+    for(let i = 0; i < size; i++){
+      const row: string[] = [];
+
+      row.push(`${i + 1}`);
+      row.push(generateFormattedWalletAddress());
+      row.push(`${Math.random() * 100_000_000}`.slice(0, 11));
+
+      rows.push(row);
+    }
+
     return rows;
   };

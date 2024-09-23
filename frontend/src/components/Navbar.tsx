@@ -7,7 +7,7 @@ const Navbar = () => {
             <div>
                 <img src={Logo} alt="logo" width={40} style={{display: "inline-block"}} className="mr-4"/>
                 <Link to="/" className="mr-4">Market</Link>
-                <Link to="/" className="mr-4">Leaderboard</Link>
+                <Link to="/leaderboard" className="mr-4">Leaderboard</Link>
             </div>
             <div>
                 <Link to="/" className="mr-4">Connect</Link>
