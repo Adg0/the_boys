@@ -10,7 +10,7 @@ export default function Leaderboard(){
     const [onSupes, setOnSupes] = useState(true);
 
     const supeHeaders: string[] = ["Rank", "Wallet", "Tag", "compV"];
-    const theBoysHeaders: string[] = ["Rank", "Wallet", "Tag", "Neutralized supes", "tempV"];
+    const theBoysHeaders: string[] = ["Rank", "Wallet", "Tag", "Neutralized Supes", "tempV"];
 
     return (
         <div className="p-4">
