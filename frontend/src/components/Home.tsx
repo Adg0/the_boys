@@ -3,6 +3,7 @@ import { generateMarketRows } from "@/helpers/generator";
 
 import MarketTable from "./MarketTable";
 import TopGraphics from "./TopGraphics";
+import Drawer from "./Drawer";
 
 export default function Home(){
     const rows = generateMarketRows();
@@ -12,6 +13,7 @@ export default function Home(){
         <div className="p-4">
             <TopGraphics />
             <MarketTable rows={rows} headers={headers} />
+            <Drawer />
         </div>
     );
 }
