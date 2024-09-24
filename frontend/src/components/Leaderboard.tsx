@@ -3,6 +3,7 @@ import { useState } from "react";
 import SupesTable from "./SupesTable";
 import TempV from "./TempV";
 import { generateSupesRows, generateTheBoysRows } from "@/helpers/generator";
+import TopGraphics from "./TopGraphics";
 
 export default function Leaderboard(){
 
@@ -13,6 +14,7 @@ export default function Leaderboard(){
 
     return (
         <div className="p-4">
+            <TopGraphics />
             <div
                 style={{fontSize: "20px", borderBottom: "1px solid rgb(100, 100, 100)"}} 
                 >
