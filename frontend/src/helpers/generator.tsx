@@ -10,6 +10,10 @@ const projects = [
     "Alpha Homora"
   ];
 
+  
+  const supes = ["Homelander", "Stormfront", "Queen Maeve", "Black Noir", "A-Train", "Translucent", "The Deep", "Starlight", "Lamplighter", "Jack from Jupiter", "Eagle the Archer", "Popclaw"];
+  const membersOfTheBoys = ["Billy Butcher", "Hughie Campbell", "Frenchie", "Mother's Milk", "Kimiko", "The Female", "Terminator"];
+
   const getProject = () => projects[Math.floor(Math.random() * projects.length)];
   const generateNumber = () => Math.round(Math.random() * 101);
   const generatePercentage = (max: number) => Math.round(100 * Math.random() * max) / 100;
@@ -28,11 +32,12 @@ const projects = [
         const row: string[] = [];
 
         row.push(getProject());
-        row.push(generateNumber().toString());
+        // row.push(generateNumber().toString());
         row.push(generatePercentage(1).toString() + "%");
         row.push("--");
         row.push(generateMoney());
         row.push(generateMoney());
+        row.push(generatePercentage(1).toString() + "%");
         row.push(generatePercentage(100).toString() + "%");
 
         rows.push(row);
@@ -58,7 +63,7 @@ const projects = [
     return `${start}...${end}`;
   };
 
-  export function generateVaultRows(size = 10){
+  export function generateTheBoysRows(size = 10){
     const rows: string[][] = [];
 
     for(let i = 0; i < size; i++){
@@ -66,6 +71,7 @@ const projects = [
 
       row.push(`${i + 1}`);
       row.push(generateFormattedWalletAddress());
+      row.push(membersOfTheBoys[i < membersOfTheBoys.length ? i : membersOfTheBoys.length - 1]);
       row.push(`${Math.ceil(Math.random() * 10)}`);
       row.push(`${Math.random() * 10}`.substring(0, 6));
 
@@ -75,7 +81,7 @@ const projects = [
     return rows;
   };
 
-  export function generateUsersRows(size = 10){
+  export function generateSupesRows(size = 10){
     const rows: string[][] = [];
 
     for(let i = 0; i < size; i++){
@@ -83,6 +89,7 @@ const projects = [
 
       row.push(`${i + 1}`);
       row.push(generateFormattedWalletAddress());
+      row.push(supes[i < supes.length ? i : supes.length - 1]);
       row.push(`${Math.random() * 100_000_000}`.slice(0, 11));
 
       rows.push(row);

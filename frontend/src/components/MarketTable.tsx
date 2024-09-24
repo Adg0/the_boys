@@ -42,18 +42,18 @@ const buttonStyle = {width: "96px", border: "1px solid #10263e", padding: "4px 1
 const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
     
     return (
-        <div className="w-full flex justify-center text-lg text-left">
+        <div className="w-full flex justify-center text-base text-left">
             <table style={{borderCollapse: "separate", borderSpacing: "0", borderRadius: "8px"}}>
                 <thead style={{backgroundColor: "#0c1d2f", color: "#aaa" }}>
                     <tr className="my-4">{
                         headers.map((header, j) => 
                             <th key={j} className="p-12 py-4" style={{borderRadius: j === 0 ? "16px 0px 0px 0px" : "0px"}}>
                                 {header}
-                                {j !== 1 ? barsIcon : ""}
+                                {barsIcon}
                             </th>)
                         }
                         <th className="p-12 py-4" style={{borderRadius: "0px 16px 0px 0px"}}>
-                            <span style={buttonStyle}>Edit Table</span>
+                            <span style={buttonStyle}>Actions</span>
                             {arrowsIcon}
                         </th>
                     </tr>
