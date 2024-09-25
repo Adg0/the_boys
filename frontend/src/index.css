@@ -75,3 +75,8 @@ tbody{
   .slider.round:before {
     border-radius: 50%;
   }
+
+  .gradient-div {
+    background: radial-gradient(circle, #122437, #08131f);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow */
+}
