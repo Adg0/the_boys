@@ -1,5 +1,3 @@
-import { useState } from "react";
-
 import Aave from "../../images/aave.png";
 import Alpha from "../../images/alpha_homora.png";
 import Anchor from "../../images/anchor_protocol.jpg";
@@ -50,12 +48,12 @@ const buttonStyle = {width: "96px", border: "1px solid #10263e", padding: "4px 1
 const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
     
     return (
-        <div className="w-full flex justify-center text-base text-left">
+        <div className="w-full flex justify-center text-xl text-left">
             <table style={{borderCollapse: "separate", borderSpacing: "0", borderRadius: "8px"}}>
                 <thead style={{backgroundColor: "#0c1d2f", color: "#aaa" }}>
                     <tr className="my-4">{
                         headers.map((header, j) => 
-                            <th key={j} className="p-12 py-4" style={{borderRadius: j === 0 ? "16px 0px 0px 0px" : "0px"}}>
+                            <th key={j} className="p-6 py-4" style={{borderRadius: j === 0 ? "16px 0px 0px 0px" : "0px"}}>
                                 {header}
                                 {barsIcon}
                             </th>)

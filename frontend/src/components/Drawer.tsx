@@ -2,8 +2,6 @@ import {
     Drawer,
     DrawerClose,
     DrawerContent,
-    DrawerDescription,
-    DrawerFooter,
     DrawerHeader,
     DrawerTitle,
     DrawerTrigger,
@@ -21,6 +19,7 @@ const threeDots = <svg viewBox="0 0 24 24" fill="none" width="40px" height="40px
 export default function(){
     return (<div style={{display: "relative"}}>
         <Drawer>
+            <DrawerHeader><DrawerTitle></DrawerTitle></DrawerHeader>
             <div style={{display: "flex", justifyContent: "center"}}>
                 <DrawerTrigger>
                     {threeDots}

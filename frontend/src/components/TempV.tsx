@@ -31,12 +31,12 @@ const imageRef: ImageMap = {
 
 const TempV: React.FC<MyComponentProps> = ({rows, headers}) => {
     return (
-        <div className="w-full flex justify-center text-base text-left">
+        <div className="w-full flex justify-center text-xl text-left">
             <table style={{borderCollapse: "separate", borderSpacing: "0", borderRadius: "8px"}}>
                 <thead style={{backgroundColor: "#0c1d2f", color: "#aaa" }}>
                     <tr className="my-4">{
                         headers.map((header, j) => 
-                            <th key={j} className="p-12 py-4" style={{borderRadius: j === 0 ? "16px 0px 0px 0px" : "0px"}}>
+                            <th key={j} className="p-6 py-4" style={{borderRadius: j === 0 ? "16px 0px 0px 0px" : "0px"}}>
                                 {header}
                                 {j !== 1 ? barsIcon : ""}
                             </th>)
