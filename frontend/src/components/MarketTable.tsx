@@ -83,7 +83,7 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                                         <DialogTrigger>Supply</DialogTrigger>
                                         <DialogContent>
                                             <DialogTitle><p style={{fontSize: "28px"}}>Supply</p></DialogTitle>
-                                            <SupplyDialog />
+                                            <SupplyDialog product={row[0]} />
                                         </DialogContent>
                                     </Dialog>
                                 </span>
@@ -102,3 +102,4 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
 };
 
 export default MarketTable;
+

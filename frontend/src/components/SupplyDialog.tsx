@@ -13,7 +13,7 @@ type OptionDetails = {
 
 type optionsType = {
     [key: string]: OptionDetails;
-}
+};
 
 const options: optionsType = {
     "Euler Prime USDC": {
@@ -24,16 +24,37 @@ const options: optionsType = {
     },
     "Apostro Lido Ecosystem": {
         option: "Apostro Lido Ecosystem", amount: 2000, walletBalance: 50, depositValue: 125, supplyAPY: 0.01, healthFactor: -40, timeToLiquidation: 400
-    }
+    },
+    "Aave": {
+        option: "Aave", amount: 10.50, walletBalance: 500, depositValue: 0, supplyAPY: 0.22, healthFactor: 50, timeToLiquidation: 10_000
+    },
+    "SushiSwap": {
+        option: "SushiSwap", amount: 0.50, walletBalance: 1500, depositValue: 1000, supplyAPY: 71.54, healthFactor: 150, timeToLiquidation: 50_000
+    },
+    "RenVM": {
+        option: "RenVM", amount: 2000, walletBalance: 50, depositValue: 125, supplyAPY: 0.01, healthFactor: -40, timeToLiquidation: 400
+    },
+    "Anchor Protocol": {
+        option: "Anchor Protocol", amount: 10.50, walletBalance: 500, depositValue: 0, supplyAPY: 0.22, healthFactor: 50, timeToLiquidation: 10_000
+    },
+    "Badger DAO": {
+        option: "Badger DAO", amount: 0.50, walletBalance: 1500, depositValue: 1000, supplyAPY: 71.54, healthFactor: 150, timeToLiquidation: 50_000
+    },
+    "Alpha Homora": {
+        option: "Alpha Homora", amount: 2000, walletBalance: 50, depositValue: 125, supplyAPY: 0.01, healthFactor: -40, timeToLiquidation: 400
+    },
 };
 
 const keys: string[] = Object.keys(options);
-console.log(`keys: ${keys}`);
 
-export default function(){
+interface MyComponentProps {
+    product: string,
+};
+
+const SupplyDialog:React.FC<MyComponentProps> = ({product}) => {
 
     const [useCollateralChecked, setUseCollateralChecked] = useState(false);
-    const [selectValue, setSelectValue] = useState("Euler Prime USDC");
+    const [selectValue, setSelectValue] = useState(product);
 
     return (<div style={{fontSize: "28px"}}>
         <div style={{display: "flex", justifyContent: "end", alignItems: "center", }}>
@@ -78,3 +99,5 @@ export default function(){
         </div>
     </div>);
 }
+
+export default SupplyDialog;
