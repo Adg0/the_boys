@@ -38,6 +38,38 @@ storage {
     decimals: StorageMap<AssetId, u8> = StorageMap {},
 }
 
+abi SRC6VaultConnector {
+    fn preview_share(
+    underlying_asset: AssetId,
+    vault_sub_id: SubId,
+    ) -> (AssetId, SubId);
+
+    #[payable]
+    #[storage(read)]
+    fn preview_wi(share_asset_id: AssetId) -> u64;
+
+}
+
+impl SRC6VaultConnector for Contract {
+    fn preview_share(
+    underlying_asset: AssetId,
+    vault_sub_id: SubId,
+    // assets: u64,
+    ) -> (AssetId, SubId) {
+        let (share_asset_id, share_asset_vault_sub_id) = vault_asset_id(underlying_asset, vault_sub_id);
+        (share_asset_id, share_asset_vault_sub_id)
+    }
+
+    #[payable]
+    #[storage(read)]
+    fn preview_wi(share_asset_id: AssetId) -> u64 {
+        let shares = msg_amount();
+        require(shares != 0, "ZERO_SHARES");
+        let assets = preview_withdraw(share_asset_id, shares);
+        assets
+    }
+}
+
 impl SRC6 for Contract {
     #[payable]
     #[storage(read, write)]
