@@ -6,6 +6,7 @@ import { BrowserRouter as Router, Link, Route, Routes } from "react-router-dom";
 
 import Navbar from './components/Navbar';
 import Leaderboard from './components/Leaderboard';
+import SupplyDialog from './components/SupplyDialog';
 
 function App() {
     return(
@@ -15,6 +16,7 @@ function App() {
 
                 <Route path="/" element={<Home />} />
                 <Route path="/leaderboard" element={<Leaderboard />} />
+                <Route path="/switch" element={<SupplyDialog />} />
             </Routes>
         </Router>
     )

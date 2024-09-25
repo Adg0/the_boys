@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import Aave from "../../images/aave.png";
 import Alpha from "../../images/alpha_homora.png";
 import Anchor from "../../images/anchor_protocol.jpg";
@@ -12,6 +14,19 @@ import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import 'react-circular-progressbar/dist/styles.css';
 
 import { Button } from "./ui/button";
+
+import {
+    Dialog,
+    DialogContent,
+    DialogTrigger,
+  } from "@/components/ui/dialog"
+import SupplyDialog from "./SupplyDialog";
+import { DialogTitle } from "@radix-ui/react-dialog";
+
+import { Switch } from "@/components/ui/switch";
+import MySwitch from "./MySwitch";
+
+// const [checked, setChecked] = useState(false);
 
 type ImageMap = {
     [key: string]: string;
@@ -72,8 +87,16 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                                     </td>)
                             }
                             <td style={{borderBottom: "2px solid black", padding: "16px 48px",  minWidth: "80px", height: "96px"}}>
-                                <Button style={{...buttonStyle, border: "1px solid rgba(0, 255, 255, 0.25)"}} className="hover:bg-gray-600">Supply</Button>
-                                <Button style={{...buttonStyle, border: "1px solid rgba(0, 255, 255, 0.25)", marginLeft: "8px"}}>Borrow</Button>
+                                <span style={{...buttonStyle, border: "1px solid rgba(0, 255, 255, 0.25)", fontSize: "14px", padding: "8px 16px", fontWeight: "bold"}} className="hover:bg-gray-600 text-sm">
+                                    <Dialog>
+                                        <DialogTrigger>Supply</DialogTrigger>
+                                        <DialogContent>
+                                            <DialogTitle>Supply</DialogTitle>
+                                            <SupplyDialog />
+                                        </DialogContent>
+                                    </Dialog>
+                                </span>
+                                <span style={{...buttonStyle, border: "1px solid rgba(0, 255, 255, 0.25)", fontSize: "14px", padding: "8px 16px", fontWeight: "bold", marginLeft: "8px"}}>Borrow</span>
                             </td>
                         </tr>
                     ))
@@ -84,6 +107,10 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                     </tr>
                 </tfoot>
             </table>
+            {/* <div style={{height: "80px", width: "96px", backgroundColor: "white"}}>
+              <Switch id="main-switch" />
+              <MySwitch checked={checked} setChecked={setChecked}/>
+            </div> */}
         </div>);
 };
 
