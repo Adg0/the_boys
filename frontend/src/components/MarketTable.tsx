@@ -13,8 +13,6 @@ import Sushi from "../../images/sushi_swap.png";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import 'react-circular-progressbar/dist/styles.css';
 
-import { Button } from "./ui/button";
-
 import {
     Dialog,
     DialogContent,
@@ -22,11 +20,6 @@ import {
   } from "@/components/ui/dialog"
 import SupplyDialog from "./SupplyDialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
-
-import { Switch } from "@/components/ui/switch";
-import MySwitch from "./MySwitch";
-
-// const [checked, setChecked] = useState(false);
 
 type ImageMap = {
     [key: string]: string;
@@ -91,7 +84,7 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                                     <Dialog>
                                         <DialogTrigger>Supply</DialogTrigger>
                                         <DialogContent>
-                                            <DialogTitle>Supply</DialogTitle>
+                                            <DialogTitle><p style={{fontSize: "28px"}}>Supply</p></DialogTitle>
                                             <SupplyDialog />
                                         </DialogContent>
                                     </Dialog>
@@ -107,10 +100,6 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                     </tr>
                 </tfoot>
             </table>
-            {/* <div style={{height: "80px", width: "96px", backgroundColor: "white"}}>
-              <Switch id="main-switch" />
-              <MySwitch checked={checked} setChecked={setChecked}/>
-            </div> */}
         </div>);
 };
 

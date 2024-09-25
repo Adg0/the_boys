@@ -1,15 +1,18 @@
 interface MyComponentProps {
-    checked: boolean,
-    setChecked: any,
+    ticked: boolean,
+    setTicked: any,
 };
 
-const MySwitch:React.FC<MyComponentProps> = ({checked, setChecked}) => {
-    return (<>
-        <label className="switch">
-        <input type="checkbox" checked />
-        <span className="slider round"></span>
-        </label>
-    </>);
+const MySwitch:React.FC<MyComponentProps> = ({ticked, setTicked}) => {
+
+    return (<div>
+        <div>
+            <label className="switch">
+            <input type="checkbox" checked={ticked} onChange={e => setTicked(e.target.ticked)} />
+            <span className="slider round"></span>
+            </label>
+        </div>
+    </div>);
 };
 
 export default MySwitch;
