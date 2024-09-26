@@ -15,6 +15,7 @@ import Sushi from "../../images/sushi_swap.png";
 
 import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "./ui/dialog";
 import SupplyDialog from "./SupplyDialog";
+import BorrowDialog from "./BorrowDialog";
 
 type ImageMap = {
     [key: string]: string;
@@ -77,16 +78,28 @@ const VaultDetails = () => {
                 </div>
                 <div style={{height: "2px", backgroundColor: "rgba(114, 131, 149, 0.5)", marginTop: "24px"}}></div>
                 <div style={{display: "flex", justifyContent: "space-between", fontSize: "20px", marginTop: "24px"}}>
-                    <button style={{width: "40%", margin: "24px", padding: "8px 24px", backgroundColor: "rgb(16, 38, 62)", color: "rgb(221, 251, 244)", fontWeight: "bold", borderRadius: "8px"}}>Borrow</button>
-                    <button style={{width: "40%", margin: "24px", padding: "8px 24px", backgroundColor: "rgb(35, 192, 155)", color: "black", fontWeight: "bold", borderRadius: "8px"}}>
+                    
                         <Dialog>
-                            <DialogTrigger>Supply</DialogTrigger>
+                            <DialogTrigger style={{width: "40%"}}>
+                                <button style={{width: "100%", margin: "24px", padding: "8px 24px", backgroundColor: "rgb(16, 38, 62)", color: "rgb(221, 251, 244)", fontWeight: "bold", borderRadius: "8px"}}>
+                                    Borrow    
+                                </button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <BorrowDialog product={asset} />
+                            </DialogContent>
+                        </Dialog>
+                        <Dialog>
+                            <DialogTrigger style={{width: "40%", marginRight: "20px"}}>
+                                <button style={{width: "100%",  padding: "8px 24px", backgroundColor: "rgb(35, 192, 155)", color: "black", fontWeight: "bold", borderRadius: "8px"}}>
+                                    Supply
+                                </button>
+                            </DialogTrigger>
                             <DialogContent>
                                 <DialogTitle><p style={{fontSize: "28px"}}>Supply</p></DialogTitle>
                                 <SupplyDialog product={asset} />
                             </DialogContent>
                         </Dialog>
-                    </button>
                 </div>
             </div>
         </div>);
