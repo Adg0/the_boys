@@ -18,6 +18,7 @@ import {
   } from "@/components/ui/dialog"
 import SupplyDialog from "./SupplyDialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
+import { Link, useNavigate } from "react-router-dom";
 
 type ImageMap = {
     [key: string]: string;
@@ -46,6 +47,8 @@ const arrowsIcon = <svg aria-hidden="true" width="18px"  style={{display: "inlin
 const buttonStyle = {width: "96px", border: "1px solid #10263e", padding: "4px 16px", borderRadius: "16px", backgroundColor: "#10263e"};
 
 const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
+
+    const navigate = useNavigate();
     
     return (
         <div className="w-full flex justify-center text-xl text-left">
@@ -71,7 +74,7 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                                 row.map((data, i) => 
                                     <td key={i} style={{borderBottom: "2px solid black", padding: "16px 48px", position: "relative", minWidth: "80px", height: "96px"}}>
                                         {i === 0 ? <img src={imageRef[row[0]]} alt="logo" style={{display: "inline", marginRight: "8px", width:"24px", height: "24px", borderRadius: "50%"}}/> : ""}
-                                        <span>{data}</span>
+                                        <span>{i === 0 ? <button onClick={() => navigate("/vault_details", {state: {row}})}>{data}</button> : data}</span>
                                         {i === 6 ? <div style={{width: "24px", height: "24px", display: "inline-block", position: "absolute", right: "16px"}}>
                                             <CircularProgressbar value={parseFloat(row[6].slice(0, row[6].length-1))} text={""} styles={buildStyles({pathColor: "#00ffff", trailColor: "#444"})}/>
                                         </div> : ""}
