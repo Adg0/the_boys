@@ -80,3 +80,15 @@ tbody{
     background: radial-gradient(circle, #122437, #08131f);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
+
+.no-spinner {
+  -moz-appearance: textfield; /* Firefox */
+  -webkit-appearance: none; /* Safari and Chrome */
+  appearance: none; /* Modern browsers */
+}
+
+.no-spinner::-webkit-inner-spin-button,
+.no-spinner::-webkit-outer-spin-button {
+  -webkit-appearance: none; /* Remove arrows */
+  margin: 0; /* Remove margin */
+}

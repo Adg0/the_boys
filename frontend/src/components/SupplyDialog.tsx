@@ -64,7 +64,13 @@ const SupplyDialog:React.FC<MyComponentProps> = ({product}) => {
         <div>
             <p>Amount</p>
             <div style={{display: "flex", justifyContent: "space-between", alignItems: "center", border: "1px solid #333", padding: "4px"}}>
-                <p>{options[selectValue].amount}</p>
+                <p>
+                    <input
+                        type="number"
+                        placeholder="0.0"
+                        style={{width: "200px", height: "52px", color: "black", padding: "4px 8px"}}
+                        className="no-spinner"/>
+                </p>
                 <select
                     value={selectValue}
                     onChange={e => setSelectValue(e.target.value)}
@@ -72,7 +78,7 @@ const SupplyDialog:React.FC<MyComponentProps> = ({product}) => {
                     keys.map(key => <option value={key} key={key}>{key}</option>)
                 }</select>
             </div>
-            <div style={{textAlign: "right", padding: "0px 8px"}}>{options[selectValue].walletBalance}</div>
+            <div style={{textAlign: "right", padding: "0px 8px"}}>{options[selectValue].walletBalance} USD</div>
             <div style={{padding: "8px", border: "2px solid #333", borderRadius: "16px"}}>
                 <h1>Details</h1>
                 <div style={{marginTop: "16px", display: "flex", justifyContent: "space-between"}}>
