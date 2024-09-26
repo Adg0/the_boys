@@ -18,7 +18,7 @@ import {
   } from "@/components/ui/dialog"
 import SupplyDialog from "./SupplyDialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 type ImageMap = {
     [key: string]: string;

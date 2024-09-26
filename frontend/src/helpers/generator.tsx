@@ -97,3 +97,20 @@ const projects = [
 
     return rows;
   };
+
+  export function generateUseRows(size = 5){
+    const rows: string[][] = [];
+    
+    for(let i = 0; i < size; i++){
+      const row: string[] = [];
+
+      row.push(getProject());
+      row.push(generatePercentage(100).toString() + "%");
+      row.push(generatePercentage(100).toString() + "%");
+      row.push(generateFormattedWalletAddress());
+
+      rows.push(row);
+    }
+    
+    return rows;
+  };
