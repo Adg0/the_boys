@@ -77,7 +77,7 @@ tbody{
   }
 
   .gradient-div {
-    background: radial-gradient(circle, #122437, #08131f);
+    background: radial-gradient(circle, #153252, #08131f 72%);
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Subtle shadow */
 }
 
