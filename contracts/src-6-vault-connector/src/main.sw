@@ -3,7 +3,10 @@ contract;
 use std::{
     asset::transfer,
     call_frames::msg_asset_id,
-    context::msg_amount,
+    context::{
+        balance_of,
+        msg_amount,
+    },
     hash::{
         Hash,
         sha256,
@@ -23,6 +26,40 @@ pub struct VaultInfo {
     asset: AssetId,
 }
 
+pub struct CollateralInfo {
+    asset: AssetId, // The asset being used as collateral
+    collateral: u64, // Total collateral provided by users
+    debt: u64, // Total borrowed amount
+    ltv_ratio: u64, // Loan-to-Value ratio for borrowing
+}
+
+struct CollateralDeposited {
+    user: Identity,
+    asset: AssetId,
+    amount: u64,
+}
+
+struct BorrowedLog {
+    user: Identity,
+    asset: AssetId,
+    amount: u64,
+}
+
+struct Repayment {
+    user: Identity,
+    asset: AssetId,
+    amount: u64,
+    debt: u64,
+    balance: u64,
+}
+
+struct Liquidated {
+    user: Identity,
+    asset: AssetId,
+    collateral: u64,
+    debt: u64,
+}
+
 storage {
     /// Vault share AssetId -> VaultInfo.
     vault_info: StorageMap<AssetId, VaultInfo> = StorageMap {},
@@ -36,26 +73,190 @@ storage {
     symbol: StorageMap<AssetId, StorageString> = StorageMap {},
     /// Asset decimals.
     decimals: StorageMap<AssetId, u8> = StorageMap {},
+    /// Vault share AssetId -> VaultInfo.
+    collateral_info: StorageMap<AssetId, CollateralInfo> = StorageMap {},
+    user_collateral: StorageMap<(Identity, AssetId), u64> = StorageMap {}, // User collateral per asset
+    user_debt: StorageMap<(Identity, AssetId), u64> = StorageMap {}, // User debt per asset
 }
 
 abi SRC6VaultConnector {
-    fn preview_share(
-    underlying_asset: AssetId,
-    vault_sub_id: SubId,
-    ) -> (AssetId, SubId);
+    #[payable]
+    #[storage(read, write)]
+    fn deposit_collateral(user: Identity) -> u64;
+
+    #[payable]
+    #[storage(read, write)]
+    fn borrow_a(user: Identity, borrow_asset_id: AssetId) -> u64;
+
+    #[payable]
+    #[storage(read, write)]
+    fn repay(user: Identity) -> u64;
+
+    fn get_balance(asset_id: AssetId) -> u64;
+
+    #[payable]
+    #[storage(read, write)]
+    fn liquidate(user: Identity, borrowed_asset_id: AssetId) -> u64;
+
+    fn preview_share(underlying_asset: AssetId, vault_sub_id: SubId) -> (AssetId, SubId);
 
     #[payable]
     #[storage(read)]
     fn preview_wi(share_asset_id: AssetId) -> u64;
-
 }
 
 impl SRC6VaultConnector for Contract {
-    fn preview_share(
-    underlying_asset: AssetId,
-    vault_sub_id: SubId,
-    // assets: u64,
-    ) -> (AssetId, SubId) {
+    #[payable]
+    #[storage(read, write)]
+    fn deposit_collateral(user: Identity) -> u64 {
+        let asset_amount = msg_amount();
+        let asset_id = msg_asset_id();
+
+        require(asset_amount != 0, "ZERO_ASSETS");
+        // require(underlying_asset == AssetId::base(), "INVALID_ASSET_ID");
+
+        let mut collateral_info = match storage.collateral_info.get(asset_id).try_read() {
+            Some(collateral_info) => collateral_info,
+            None => CollateralInfo {
+                asset: asset_id,
+                collateral: 0,
+                debt: 0,
+                ltv_ratio: 70,
+            },
+        };
+        // storage.collateral_info.get(asset_id).read();
+        collateral_info.collateral = collateral_info.collateral + asset_amount;
+        storage.collateral_info.insert(asset_id, collateral_info);
+
+        let user_collateral = storage.user_collateral.get((user, asset_id)).try_read().unwrap_or(0) + asset_amount;
+
+        storage
+            .user_collateral
+            .insert((user, asset_id), user_collateral);
+
+        // Log the deposit for future reference
+        log(CollateralDeposited {
+            user,
+            asset: asset_id,
+            amount: asset_amount,
+        });
+
+        // collateral_info.collateral
+        user_collateral
+    }
+
+    #[payable]
+    #[storage(read, write)]
+    fn borrow_a(user: Identity, borrow_asset_id: AssetId) -> u64 {
+        let asset_amount = msg_amount();
+        let asset_id = msg_asset_id();
+
+        require(asset_amount != 0, "ZERO_ASSETS");
+
+        let user_collateral = storage.user_collateral.get((user, asset_id)).try_read();
+        let collateral = user_collateral.unwrap_or(0);
+        let mut collateral_info = storage.collateral_info.get(asset_id).read();
+
+        let max_borrow = collateral * collateral_info.ltv_ratio / 100; // Max borrowable based on LTV
+        let user_debt = storage.user_debt.get((user, borrow_asset_id)).try_read().unwrap_or(0) + asset_amount;
+
+        require(user_debt <= max_borrow, "Exceeds borrow limit");
+
+        // Update the user's debt and the vault's managed assets
+        storage.user_debt.insert((user, borrow_asset_id), user_debt);
+        collateral_info.debt = collateral_info.debt + asset_amount;
+        storage.collateral_info.insert(asset_id, collateral_info);
+
+        // Transfer the borrowed amount to the user
+        transfer(user, borrow_asset_id, asset_amount);
+
+        log(BorrowedLog {
+            user,
+            asset: borrow_asset_id,
+            amount: asset_amount,
+        });
+
+        // 1
+        user_debt
+    }
+
+    #[payable]
+    #[storage(read, write)]
+    fn repay(user: Identity) -> u64 {
+        let asset_amount = msg_amount();
+        let borrow_asset_id = msg_asset_id();
+
+        require(asset_amount != 0, "ZERO_ASSETS");
+
+        let user_debt = storage.user_debt.get((user, borrow_asset_id)).try_read().unwrap_or(0);
+
+        require(user_debt >= asset_amount, "Cannot repay more than borrowed");
+
+        // Update user's debt and the vault's managed assets
+        storage
+            .user_debt
+            .insert((user, borrow_asset_id), user_debt - asset_amount);
+
+        let mut collateral_info = storage.collateral_info.get(borrow_asset_id).read();
+        collateral_info.debt = collateral_info.debt - asset_amount;
+        storage
+            .collateral_info
+            .insert(borrow_asset_id, collateral_info);
+
+        // let mut vault_info = storage.vault_info.get(asset_id).unwrap();
+        // vault_info.managed_assets -= amount;
+        // storage.vault_info.insert(asset, vault_info);
+
+        // Transfer the repaid amount from the user back to the vault
+        // transfer_from(user, ContractId::this(), asset_id, asset_amount);
+
+        log(Repayment {
+            user,
+            asset: borrow_asset_id,
+            amount: asset_amount,
+            debt: (user_debt - asset_amount),
+            balance: balance_of(ContractId::this(), borrow_asset_id),
+        });
+        (user_debt - asset_amount)
+    }
+
+    #[payable]
+    #[storage(read, write)]
+    fn liquidate(user: Identity, borrowed_asset_id: AssetId) -> u64 {
+        let asset_amount = msg_amount();
+        let asset_id = msg_asset_id();
+
+        let collateral = storage.user_collateral.get((user, asset_id)).try_read().unwrap_or(0);
+        let user_debt = storage.user_debt.get((user, borrowed_asset_id)).try_read().unwrap_or(0);
+        let mut collateral_info = storage.collateral_info.get(asset_id).read();
+
+        // Calculate liquidation threshold (e.g., if debt exceeds 80% of collateral)
+        let liquidation_threshold = collateral * 80 / 100;
+        require(user_debt > liquidation_threshold, "Cannot liquidate");
+
+        // Seize collateral and reduce debt
+        storage.user_collateral.insert((user, asset_id), 0);
+        storage.user_debt.insert((user, borrowed_asset_id), 0);
+
+        // Transfer the seized collateral to the liquidator or the vault
+        transfer(msg_sender().unwrap(), asset_id, collateral);
+
+        log(Liquidated {
+            user,
+            asset: asset_id,
+            collateral,
+            debt: user_debt,
+        });
+
+        collateral
+    }
+
+    fn get_balance(asset_id: AssetId) -> u64 {
+        balance_of(ContractId::this(), asset_id)
+    }
+
+    fn preview_share(underlying_asset: AssetId, vault_sub_id: SubId // assets: u64,
+) -> (AssetId, SubId) {
         let (share_asset_id, share_asset_vault_sub_id) = vault_asset_id(underlying_asset, vault_sub_id);
         (share_asset_id, share_asset_vault_sub_id)
     }
