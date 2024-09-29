@@ -7,11 +7,9 @@ mod interface;
 
 use ::data_structures::State;
 use ::errors::AccessError;
-use ::events::PriceUpdateEvent;
+use ::events::{PriceUpdateEvent,PriceOfUpdateEvent};
 use ::interface::Oracle;
-use std::auth::msg_sender;
-use std::constants::ZERO_B256;
-use std::block::timestamp;
+use std::hash::Hash;
 
 configurable {
     /// Owner of the contract.
@@ -21,6 +19,8 @@ configurable {
 storage {
     /// Current price of tracked asset.
     price: Option<u64> = Option::None,
+    /// Current price of mapped asset
+    price_of: StorageMap<AssetId, u64> = StorageMap {},
 }
 
 impl Oracle for Contract {
@@ -34,6 +34,21 @@ impl Oracle for Contract {
             Option::Some(price) => price,
             Option::None => Option::None,
         }
+    }
+
+    #[storage(write)]
+    fn set_price_of(price: u64, asset_id: AssetId) {
+        require(msg_sender().unwrap() == OWNER, AccessError::NotOwner);
+
+        storage.price_of.insert(asset_id, price);
+        
+        log(price);
+        log(PriceOfUpdateEvent { price, asset: asset_id });
+    }
+
+    #[storage(read)]
+    fn get_price_of(asset_id: AssetId) -> u64 {
+        storage.price_of.get(asset_id).read()
     }
 
     #[storage(write)]

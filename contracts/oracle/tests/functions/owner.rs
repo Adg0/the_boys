@@ -3,7 +3,7 @@ use fuels::{
     accounts::wallet::{Wallet, WalletUnlocked},
     // programs::call_response::FuelCallResponse,
     programs::responses::*,
-    types::Identity,
+    types::{Identity,AssetId},
 };
 
 abigen!(Contract(
@@ -28,6 +28,23 @@ pub mod abi_calls {
     }
     pub async fn price(contract: &Oracle<WalletUnlocked>) -> Option<u64> {
         contract.methods().price().call().await.unwrap().value
+    }
+
+    pub async fn get_price_of(contract: &Oracle<WalletUnlocked>, asset_id: AssetId) -> u64 {
+        contract.methods().get_price_of(asset_id).call().await.unwrap().value
+    }
+
+    pub async fn set_price_of(
+        contract: &Oracle<WalletUnlocked>,
+        new_price: u64,
+        asset_id: AssetId,
+    ) -> CallResponse<()> {
+        contract
+            .methods()
+            .set_price_of(new_price,asset_id)
+            .call()
+            .await
+            .unwrap()
     }
 
     pub async fn set_price(
