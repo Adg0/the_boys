@@ -121,7 +121,7 @@ impl SRC6VaultConnector for Contract {
                 asset: asset_id,
                 collateral: 0,
                 debt: 0,
-                ltv_ratio: 70,
+                ltv_ratio: 90,
             },
         };
         // storage.collateral_info.get(asset_id).read();
@@ -223,7 +223,7 @@ impl SRC6VaultConnector for Contract {
     #[payable]
     #[storage(read, write)]
     fn liquidate(user: Identity, borrowed_asset_id: AssetId) -> u64 {
-        let asset_amount = msg_amount();
+        // let asset_amount = msg_amount();
         let asset_id = msg_asset_id();
 
         let collateral = storage.user_collateral.get((user, asset_id)).try_read().unwrap_or(0);

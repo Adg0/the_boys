@@ -94,7 +94,7 @@ async fn test_deposit_collateral() -> Result<()> {
     .value;
     println!("Asset balance-1: {lp_token_balance}");
 
-    let deposit_amount = 1_000;
+    let deposit_amount = 1_000_000;
     let call_params = CallParameters::default()
         .with_amount(deposit_amount)
         .with_asset_id(AssetId::zeroed());
@@ -116,7 +116,7 @@ async fn test_deposit_collateral() -> Result<()> {
     .value;
     println!("Asset balance-2: {lp_token_balance}");
 
-    let borrow_amount = 1_000;
+    let borrow_amount = 900_000;
     let call_params = CallParameters::default()
         .with_amount(borrow_amount)
         .with_asset_id(base_asset_id);
@@ -140,21 +140,38 @@ async fn test_deposit_collateral() -> Result<()> {
     .value;
     println!("Asset balance-3: {lp_token_balance}");
 
-    let repay_amount = 1_000;
+    // let repay_amount = 1_000;
+    // let call_params = CallParameters::default()
+    //     .with_amount(repay_amount)
+    //     .with_asset_id(AssetId::zeroed());
+    // let response = _instance
+    //     .methods()
+    //     .repay(user.clone())
+    //     .call_params(call_params)?
+    //     .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
+    //     .call()
+    //     .await?;
+    // let repay = response.value;
+    // let logs = response.decode_logs();
+    // println!("{:?}", logs);
+    // println!("Remaining debt: {repay}");
+
+    // liquidate
+    // let asset_amount = 1_000;
     let call_params = CallParameters::default()
-        .with_amount(repay_amount)
-        .with_asset_id(AssetId::zeroed());
+        // .with_amount(asset_amount)
+        .with_asset_id(base_asset_id);
     let response = _instance
         .methods()
-        .repay(user.clone())
+        .liquidate(user.clone(), AssetId::zeroed())
         .call_params(call_params)?
         .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
         .call()
         .await?;
-    let repay = response.value;
+    let liquidated = response.value;
     let logs = response.decode_logs();
     println!("{:?}", logs);
-    println!("Remaining debt: {repay}");
+    println!("Liquidated amount: {liquidated}");
 
     let lp_token_balance = _instance.methods()
     .get_balance(lp_asset_id)
