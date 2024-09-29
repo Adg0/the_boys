@@ -17,6 +17,8 @@ use std::{
 
 use standards::{src20::SRC20, src6::{Deposit, SRC6, Withdraw}};
 
+use oracle_lib::*;
+
 pub struct VaultInfo {
     /// Amount of assets currently managed by this vault
     managed_assets: u64,
@@ -105,6 +107,11 @@ abi SRC6VaultConnector {
     fn preview_wi(share_asset_id: AssetId) -> u64;
 }
 
+configurable {
+    /// Oracle contract
+    ORACLE_CONTRACT_ID: ContractId = ContractId::from(0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03),
+}
+
 impl SRC6VaultConnector for Contract {
     #[payable]
     #[storage(read, write)]
@@ -156,11 +163,17 @@ impl SRC6VaultConnector for Contract {
         let user_collateral = storage.user_collateral.get((user, asset_id)).try_read();
         let collateral = user_collateral.unwrap_or(0);
         let mut collateral_info = storage.collateral_info.get(asset_id).read();
-
-        let max_borrow = collateral * collateral_info.ltv_ratio / 100; // Max borrowable based on LTV
         let user_debt = storage.user_debt.get((user, borrow_asset_id)).try_read().unwrap_or(0) + asset_amount;
 
-        require(user_debt <= max_borrow, "Exceeds borrow limit");
+        // External call
+        let oracle_contract_id: b256 = ORACLE_CONTRACT_ID.into();
+        let oracle_contract = abi(Oracle, oracle_contract_id);
+        let price_collateral = oracle_contract.get_price_of(asset_id);
+        let price_borrowing = oracle_contract.get_price_of(borrow_asset_id);
+        
+        let max_borrow = (collateral * price_collateral) * collateral_info.ltv_ratio / 100; // Max borrowable based on LTV
+
+        require((user_debt * price_borrowing) <= max_borrow, "Exceeds borrow limit");
 
         // Update the user's debt and the vault's managed assets
         storage.user_debt.insert((user, borrow_asset_id), user_debt);

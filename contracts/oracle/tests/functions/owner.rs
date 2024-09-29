@@ -5,6 +5,7 @@ use fuels::{
     programs::responses::*,
     types::{Identity,AssetId},
 };
+use std::str::FromStr;
 
 abigen!(Contract(
     name = "Oracle",
@@ -69,9 +70,14 @@ pub mod test_helpers {
         let wallets = launch_custom_provider_and_get_wallets(WalletsConfig::default(), None, None)
             .await
             .unwrap();
+        
+        let new_owner_address = Address::from_str("0x09c0b2d1a486c439a87bcba6b46a7a1a23f3897cc83a94521a96da5c23bc58db").unwrap();
 
+        let configurables = OracleConfigurables::default()
+            .with_OWNER(Identity::Address(new_owner_address)).unwrap();
+    
         let oracle_id =
-            Contract::load_from(ORACLE_CONTRACT_BINARY_PATH, LoadConfiguration::default())
+            Contract::load_from(ORACLE_CONTRACT_BINARY_PATH, LoadConfiguration::default().with_configurables(configurables))
                 .unwrap()
                 .deploy(&wallets[0], TxPolicies::default())
                 .await

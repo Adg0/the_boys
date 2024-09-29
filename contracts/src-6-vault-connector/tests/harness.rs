@@ -1,5 +1,5 @@
 use fuels::{prelude::*, types::{ContractId,Bits256,AssetId,Identity}};
-
+use std::str::FromStr;
 // Load abi from json
 abigen!(Contract(
     name = "MyContract",
@@ -28,10 +28,14 @@ async fn get_contract_instance() -> (MyContract<WalletUnlocked>, ContractId, Wal
     .await.unwrap();
     let wallet = &wallets[0];
     let lpwallet = &wallets[1];
+    // fuel18m0xy452gcq9stremxdtmhdt3a39etkhw320czyg2m4mppjfdsps305xmj
+    let new_oracle_id = ContractId::from_str("0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03").unwrap();
+    let configurables = MyContractConfigurables::default()
+        .with_ORACLE_CONTRACT_ID(new_oracle_id).unwrap();
 
     let id = Contract::load_from(
         "./out/debug/src-6-vault-connector.bin",
-        LoadConfiguration::default(),
+        LoadConfiguration::default().with_configurables(configurables),
     )
     .unwrap()
     .deploy(wallet, TxPolicies::default())
