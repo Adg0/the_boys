@@ -1,0 +1,27 @@
+# yaml-language-server: $schema=./node_modules/envio/fuel.schema.json
+name: vault-indexer
+ecosystem: fuel
+networks:
+- id: 0
+  start_block: 0
+  contracts:
+  - name: SVC
+    address:
+    - 0xb5cec30db85258014e9504e0882681198692a3d0bbcea5c343e8931ab8b31451
+    abi_file_path: abis/svc-abi.json
+    handler: src/EventHandlers.ts
+    events:
+    - name: StrLog
+      logId: '10098701174489624218'
+    - name: Liquidated
+      logId: '11621672867880479558'
+    - name: Deposit
+      logId: '13151976532709238696'
+    - name: Withdraw
+      logId: '7130535457264345996'
+    - name: Repayment
+      logId: '9246709786259806457'
+    - name: CollateralDeposited
+      logId: '5573110697820022757'
+    - name: BorrowedLog
+      logId: '6351481714185152651'
