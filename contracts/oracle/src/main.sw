@@ -42,6 +42,7 @@ impl Oracle for Contract {
 
         storage.price.write(Option::Some(price));
 
+        log(price);
         log(PriceUpdateEvent { price });
     }
 }
