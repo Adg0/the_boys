@@ -5,3 +5,10 @@ pub struct PriceUpdateEvent {
     /// Updated price.
     pub price: u64,
 }
+
+pub struct PriceOfUpdateEvent {
+    /// Updated price.
+    pub price: u64,
+    /// Updated asset
+    pub asset: AssetId,
+}

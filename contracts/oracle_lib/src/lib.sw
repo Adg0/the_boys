@@ -1,5 +1,6 @@
 library;
 
+// anything `pub` here will be exported as a part of this library's API
 abi Oracle {
     /// Return the owner (node) of the oracle.
     ///

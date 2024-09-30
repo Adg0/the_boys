@@ -1,7 +1,7 @@
 [project]
 authors = ["adapole"]
-entry = "main.sw"
+entry = "lib.sw"
 license = "Apache-2.0"
-name = "oracle"
+name = "oracle_lib"
 
 [dependencies]
