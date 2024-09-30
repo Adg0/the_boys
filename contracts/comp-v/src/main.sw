@@ -1,9 +1,11 @@
 contract;
 
 mod errors;
+mod events;
 mod interface;
 
 use errors::{AmountError, MintError, SetError};
+use ::events::{MintEvent,BurnEvent};
 use standards::{src20::{SetDecimalsEvent, SetNameEvent, SetSymbolEvent, SRC20, TotalSupplyEvent,}, src5::{SRC5, State},};
 use sway_libs::ownership::{
         _owner,
@@ -28,7 +30,7 @@ configurable {
     /// The symbol of the asset minted by this contract.
     SYMBOL: str[5] = __to_str_array("COMPV"),
     /// MINTER
-    // MINTER: ContractId = ContractId::from(0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03),
+    MINTER: ContractId = ContractId::from(0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03),
 }
 
 impl SRC20 for Contract {
@@ -131,17 +133,34 @@ impl Compv for Contract {
     #[storage(read, write)]
     fn mint(recipient: Identity, amount: u64) {
         only_owner();
-        storage.total_supply.write(storage.total_supply.try_read().unwrap() + amount);
+
+        let current_supply = storage.total_supply.try_read().unwrap();
+        storage.total_supply.write(current_supply + amount);
         let _ = mint_to(recipient, SubId::zero(), amount);
+
+        log(MintEvent {
+            recipient: recipient,
+            supply: current_supply + amount,
+            minted: amount,
+        });
     }
 
     #[payable]
     #[storage(read, write)]
     fn burn(amount: u64) {
         require(msg_amount() == amount, AmountError::AmountMismatch);
-        storage.total_supply.write(storage.total_supply.try_read().unwrap() - amount);
+        
+        let current_supply = storage.total_supply.try_read().unwrap();
+
+        storage.total_supply.write(current_supply - amount);
 
         burn(SubId::zero(), amount);
+
+        log(BurnEvent {
+            user: msg_sender().unwrap(),
+            supply: current_supply - amount,
+            burned: amount,
+        });
     }
 }
 
