@@ -4,7 +4,11 @@ use std::str::FromStr;
 abigen!(Contract(
     name = "MyContract",
     abi = "out/debug/src-6-vault-connector-abi.json"
-));
+),Contract(
+    name = "MyAsset",
+    abi = "out/debug/comp-v-abi.json"
+)
+);
 
 async fn get_contract_instance() -> (MyContract<WalletUnlocked>, ContractId, WalletUnlocked, WalletUnlocked) {
     let base_asset_id: AssetId =
@@ -30,8 +34,10 @@ async fn get_contract_instance() -> (MyContract<WalletUnlocked>, ContractId, Wal
     let lpwallet = &wallets[1];
     // fuel18m0xy452gcq9stremxdtmhdt3a39etkhw320czyg2m4mppjfdsps305xmj
     let new_oracle_id = ContractId::from_str("0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03").unwrap();
+    let compv_id = ContractId::from_str("0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03").unwrap();
     let configurables = MyContractConfigurables::default()
-        .with_ORACLE_CONTRACT_ID(new_oracle_id).unwrap();
+        .with_ORACLE_CONTRACT_ID(new_oracle_id).unwrap()
+        .with_COMPV_CONTRACT_ID(compv_id).unwrap();
 
     let id = Contract::load_from(
         "./out/debug/src-6-vault-connector.bin",

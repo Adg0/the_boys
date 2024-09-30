@@ -18,6 +18,7 @@ use std::{
 use standards::{src20::SRC20, src6::{Deposit, SRC6, Withdraw}};
 
 use oracle_lib::*;
+use asset_lib::*;
 
 pub struct VaultInfo {
     /// Amount of assets currently managed by this vault
@@ -110,6 +111,8 @@ abi SRC6VaultConnector {
 configurable {
     /// Oracle contract
     ORACLE_CONTRACT_ID: ContractId = ContractId::from(0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03),
+    COMPV_CONTRACT_ID: ContractId = ContractId::from(0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03),
+    TEMPV_CONTRACT_ID: ContractId = ContractId::from(0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03),
 }
 
 impl SRC6VaultConnector for Contract {
@@ -171,9 +174,11 @@ impl SRC6VaultConnector for Contract {
         let price_collateral = oracle_contract.get_price_of(asset_id);
         let price_borrowing = oracle_contract.get_price_of(borrow_asset_id);
         
-        let max_borrow = (collateral * price_collateral) * collateral_info.ltv_ratio / 100; // Max borrowable based on LTV
+        // let max_borrow = (collateral * price_collateral) * collateral_info.ltv_ratio / 100; // Max borrowable based on LTV
+        // require((user_debt * price_borrowing) <= max_borrow, "Exceeds borrow limit");
 
-        require((user_debt * price_borrowing) <= max_borrow, "Exceeds borrow limit");
+        let max_borrow = collateral * collateral_info.ltv_ratio / 100; // Max borrowable based on LTV
+        require(user_debt <= max_borrow, "Exceeds borrow limit");
 
         // Update the user's debt and the vault's managed assets
         storage.user_debt.insert((user, borrow_asset_id), user_debt);
@@ -182,6 +187,14 @@ impl SRC6VaultConnector for Contract {
 
         // Transfer the borrowed amount to the user
         transfer(user, borrow_asset_id, asset_amount);
+
+        // External call
+        let compv_contract_id: b256 = COMPV_CONTRACT_ID.into();
+        let compv_contract = abi(Compv, compv_contract_id);
+        let total_supply = compv_contract.total_supply(asset_id);
+        require( total_supply == Some(0), "Total Supply greater than zero");
+        compv_contract.mint(user, asset_amount);
+        
 
         log(BorrowedLog {
             user,

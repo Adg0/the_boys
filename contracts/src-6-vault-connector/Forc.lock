@@ -1,4 +1,9 @@
 [[package]]
+name = "asset_lib"
+source = "path+from-root-ED8F275351CACC43"
+dependencies = ["std"]
+
+[[package]]
 name = "core"
 source = "path+from-root-4BB20845430AF9CF"
 
@@ -11,6 +16,7 @@ dependencies = ["std"]
 name = "src-6-vault-connector"
 source = "member"
 dependencies = [
+    "asset_lib",
     "oracle_lib",
     "standards",
     "std",
