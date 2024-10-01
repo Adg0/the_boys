@@ -1,0 +1,121 @@
+{
+  "programType": "contract",
+  "specVersion": "1",
+  "encodingVersion": "1",
+  "concreteTypes": [
+    {
+      "type": "()",
+      "concreteTypeId": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d"
+    },
+    {
+      "type": "enum std::identity::Identity",
+      "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335",
+      "metadataTypeId": 1
+    },
+    {
+      "type": "struct StatusLog",
+      "concreteTypeId": "27250e0db06c3e7c9c5b27aef1325071476f1201864b189a465f36d9e7d52474",
+      "metadataTypeId": 2
+    }
+  ],
+  "metadataTypes": [
+    {
+      "type": "b256",
+      "metadataTypeId": 0
+    },
+    {
+      "type": "enum std::identity::Identity",
+      "metadataTypeId": 1,
+      "components": [
+        {
+          "name": "Address",
+          "typeId": 3
+        },
+        {
+          "name": "ContractId",
+          "typeId": 4
+        }
+      ]
+    },
+    {
+      "type": "struct StatusLog",
+      "metadataTypeId": 2,
+      "components": [
+        {
+          "name": "amount",
+          "typeId": 5
+        },
+        {
+          "name": "to",
+          "typeId": 1
+        }
+      ]
+    },
+    {
+      "type": "struct std::address::Address",
+      "metadataTypeId": 3,
+      "components": [
+        {
+          "name": "bits",
+          "typeId": 0
+        }
+      ]
+    },
+    {
+      "type": "struct std::contract_id::ContractId",
+      "metadataTypeId": 4,
+      "components": [
+        {
+          "name": "bits",
+          "typeId": 0
+        }
+      ]
+    },
+    {
+      "type": "u64",
+      "metadataTypeId": 5
+    }
+  ],
+  "functions": [
+    {
+      "inputs": [
+        {
+          "name": "recipient",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "deposit",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        }
+      ]
+    },
+    {
+      "inputs": [
+        {
+          "name": "recipient",
+          "concreteTypeId": "ab7cd04e05be58e3fc15d424c2c4a57f824a2a2d97d67252440a3925ebdc1335"
+        }
+      ],
+      "name": "withdraw",
+      "output": "2e38e77b22c314a449e91fafed92a43826ac6aa403ae6a8acb6cf58239fbaf5d",
+      "attributes": [
+        {
+          "name": "payable",
+          "arguments": []
+        }
+      ]
+    }
+  ],
+  "loggedTypes": [
+    {
+      "logId": "2820676193574731388",
+      "concreteTypeId": "27250e0db06c3e7c9c5b27aef1325071476f1201864b189a465f36d9e7d52474"
+    }
+  ],
+  "messagesTypes": [],
+  "configurables": []
+}
