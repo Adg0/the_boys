@@ -13,6 +13,7 @@ use std::{
     },
     storage::storage_string::*,
     string::String,
+    constants::DEFAULT_SUB_ID,
 };
 
 use standards::{src20::SRC20, src6::{Deposit, SRC6, Withdraw}};
@@ -193,7 +194,7 @@ impl SRC6VaultConnector for Contract {
         let compv_contract = abi(Compv, compv_contract_id);
         let total_supply = compv_contract.total_supply(asset_id);
         require( total_supply == Some(0), "Total Supply greater than zero");
-        compv_contract.mint(user, asset_amount);
+        compv_contract.mint(user, Some(DEFAULT_SUB_ID), asset_amount);
         
 
         log(BorrowedLog {
