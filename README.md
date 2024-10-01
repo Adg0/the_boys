@@ -26,4 +26,15 @@ The mechanism involves a Dutch auction where the price starts high and decreases
 
 $$ initPrice - initPrice * timePassed / epochPeriod $$
 
+## Gallery
+
+![Vault][def1]
+![Borrowing Flow][def2]
+![Liquidation Flow][def3]
+![Temp-V][def4]
+
 [def]: ./docs/compv.png
+[def1]: ./docs/vault.png
+[def2]: ./docs/borrow.png
+[def3]: ./docs/liquidation.png
+[def4]: ./docs/tempv.png
