@@ -4,7 +4,7 @@ Protocols in decentralised finance (DeFi) often generate revenues by accruing fe
 
 ## Dutch Auction
 
-The mechanism involves a Dutch auction where the price starts high and decreases over time. The first person to pay the auction price at a certain point is allowed to claim all the assets in the Fee Flow controller. 
+The mechanism involves a Dutch auction where the price starts high and decreases over time. The first person to pay the auction price at a certain point is allowed to claim all the assets in the treasury. 
 
 ![Compound-V][def]
 
