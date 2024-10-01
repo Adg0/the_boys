@@ -344,6 +344,7 @@ name = "comp-v"
 version = "0.1.0"
 dependencies = [
  "fuels",
+ "sha2",
  "tokio",
 ]
 
