@@ -14,4 +14,4 @@ $$ initPrice - initPrice * timePassed / epochPeriod $$
 
 
 
-[def]: ../docs/compv.png
+[def]: ../../docs/compv.png
