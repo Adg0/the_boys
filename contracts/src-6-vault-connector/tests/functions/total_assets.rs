@@ -34,7 +34,6 @@ mod success {
         mint(&user.compv, recipient, Bits256(*sub_id_1), 100).await;
         
         let assets = total_assets(&user.compv).await;
-        // println!("Assets: {assets}");
         assert_eq!(assets, 1);
     }
 

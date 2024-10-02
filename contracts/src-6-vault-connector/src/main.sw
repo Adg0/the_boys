@@ -1,8 +1,14 @@
 contract;
 
+mod events;
+mod interface;
+use events::*;
+use interface::*;
+
 use std::{
     asset::transfer,
     call_frames::msg_asset_id,
+    constants::DEFAULT_SUB_ID,
     context::{
         balance_of,
         msg_amount,
@@ -15,53 +21,10 @@ use std::{
     string::String,
 };
 
-use standards::{src20::SRC20, src6::{Deposit, SRC6, Withdraw}};
+use standards::{src20::SRC20, src5::{SRC5, State}, src6::{Deposit, SRC6, Withdraw}};
 
 use oracle_lib::*;
 use asset_lib::*;
-
-pub struct VaultInfo {
-    /// Amount of assets currently managed by this vault
-    managed_assets: u64,
-    /// The vault_sub_id of this vault.
-    vault_sub_id: SubId,
-    /// The asset being managed by this vault
-    asset: AssetId,
-}
-
-pub struct CollateralInfo {
-    asset: AssetId, // The asset being used as collateral
-    collateral: u64, // Total collateral provided by users
-    debt: u64, // Total borrowed amount
-    ltv_ratio: u64, // Loan-to-Value ratio for borrowing
-}
-
-struct CollateralDeposited {
-    user: Identity,
-    asset: AssetId,
-    amount: u64,
-}
-
-struct BorrowedLog {
-    user: Identity,
-    asset: AssetId,
-    amount: u64,
-}
-
-struct Repayment {
-    user: Identity,
-    asset: AssetId,
-    amount: u64,
-    debt: u64,
-    balance: u64,
-}
-
-struct Liquidated {
-    user: Identity,
-    asset: AssetId,
-    collateral: u64,
-    debt: u64,
-}
 
 storage {
     /// Vault share AssetId -> VaultInfo.
@@ -82,40 +45,41 @@ storage {
     user_debt: StorageMap<(Identity, AssetId), u64> = StorageMap {}, // User debt per asset
 }
 
-abi SRC6VaultConnector {
-    #[payable]
-    #[storage(read, write)]
-    fn deposit_collateral(user: Identity) -> u64;
-
-    #[payable]
-    #[storage(read, write)]
-    fn borrow_a(user: Identity, borrow_asset_id: AssetId) -> u64;
-
-    #[payable]
-    #[storage(read, write)]
-    fn repay(user: Identity) -> u64;
-
-    fn get_balance(asset_id: AssetId) -> u64;
-
-    #[payable]
-    #[storage(read, write)]
-    fn liquidate(user: Identity, borrowed_asset_id: AssetId) -> u64;
-
-    fn preview_share(underlying_asset: AssetId, vault_sub_id: SubId) -> (AssetId, SubId);
-
-    #[payable]
-    #[storage(read)]
-    fn preview_wi(share_asset_id: AssetId) -> u64;
-}
+/// The compv ContractId of this contract at deployment.
+#[allow(dead_code)]
+const INITIAL_COMPV: ContractId = ContractId::from(0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03);
 
 configurable {
     /// Oracle contract
     ORACLE_CONTRACT_ID: ContractId = ContractId::from(0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03),
-    COMPV_CONTRACT_ID: ContractId = ContractId::from(0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03),
+    COMPV_CONTRACT_ID: ContractId = INITIAL_COMPV,
     TEMPV_CONTRACT_ID: ContractId = ContractId::from(0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03),
 }
 
 impl SRC6VaultConnector for Contract {
+    #[storage(read, write)]
+    fn configure_compv(contract_id: ContractId) {
+        let owner = Identity::ContractId(ContractId::this());
+
+        // External call
+        let src_5_abi = abi(SRC5, contract_id.bits());
+        require(
+            src_5_abi
+                .owner() == State::Uninitialized,
+            "Already Initialized",
+        );
+        // let compv_contract_id: b256 = COMPV_CONTRACT_ID.into();
+
+        let compv_contract = abi(Compv, contract_id.bits());
+
+        compv_contract.constructor(owner);
+        require(
+            src_5_abi
+                .owner() == State::Initialized(owner),
+            "Owner did not get Initialized",
+        );
+    }
+
     #[payable]
     #[storage(read, write)]
     fn deposit_collateral(user: Identity) -> u64 {
@@ -169,14 +133,13 @@ impl SRC6VaultConnector for Contract {
         let user_debt = storage.user_debt.get((user, borrow_asset_id)).try_read().unwrap_or(0) + asset_amount;
 
         // External call
-        let oracle_contract_id: b256 = ORACLE_CONTRACT_ID.into();
-        let oracle_contract = abi(Oracle, oracle_contract_id);
-        let price_collateral = oracle_contract.get_price_of(asset_id);
-        let price_borrowing = oracle_contract.get_price_of(borrow_asset_id);
-        
+        // let oracle_contract_id: b256 = ORACLE_CONTRACT_ID.into();
+        // let oracle_contract = abi(Oracle, oracle_contract_id);
+        // let price_collateral = oracle_contract.get_price_of(asset_id);
+        // let price_borrowing = oracle_contract.get_price_of(borrow_asset_id);
+
         // let max_borrow = (collateral * price_collateral) * collateral_info.ltv_ratio / 100; // Max borrowable based on LTV
         // require((user_debt * price_borrowing) <= max_borrow, "Exceeds borrow limit");
-
         let max_borrow = collateral * collateral_info.ltv_ratio / 100; // Max borrowable based on LTV
         require(user_debt <= max_borrow, "Exceeds borrow limit");
 
@@ -191,10 +154,9 @@ impl SRC6VaultConnector for Contract {
         // External call
         let compv_contract_id: b256 = COMPV_CONTRACT_ID.into();
         let compv_contract = abi(Compv, compv_contract_id);
-        let total_supply = compv_contract.total_supply(asset_id);
-        require( total_supply == Some(0), "Total Supply greater than zero");
-        compv_contract.mint(user, asset_amount);
-        
+        // let total_supply = compv_contract.total_supply(asset_id);
+        // require( total_supply == Some(0), "Total Supply greater than zero");
+        compv_contract.mint(user, Some(DEFAULT_SUB_ID), asset_amount);
 
         log(BorrowedLog {
             user,
@@ -304,9 +266,9 @@ impl SRC6 for Contract {
         let asset_amount = msg_amount();
         let underlying_asset = msg_asset_id();
 
-        require(underlying_asset == AssetId::base(), "INVALID_ASSET_ID");
-        let (shares, share_asset, share_asset_vault_sub_id) = preview_deposit(underlying_asset, vault_sub_id, asset_amount);
         require(asset_amount != 0, "ZERO_ASSETS");
+        // require(underlying_asset == AssetId::base(), "INVALID_ASSET_ID");
+        let (shares, share_asset, share_asset_vault_sub_id) = preview_deposit(underlying_asset, vault_sub_id, asset_amount);
 
         _mint(receiver, share_asset, share_asset_vault_sub_id, shares);
 
@@ -370,13 +332,9 @@ impl SRC6 for Contract {
 
     #[storage(read)]
     fn managed_assets(underlying_asset: AssetId, vault_sub_id: SubId) -> u64 {
-        if underlying_asset == AssetId::base() {
-            let vault_share_asset = vault_asset_id(underlying_asset, vault_sub_id).0;
-            // In this implementation managed_assets and max_withdrawable are the same. However in case of lending out of assets, managed_assets should be greater than max_withdrawable.
-            managed_assets(vault_share_asset)
-        } else {
-            0
-        }
+        let vault_share_asset = vault_asset_id(underlying_asset, vault_sub_id).0;
+        // In this implementation managed_assets and max_withdrawable are the same. However in case of lending out of assets, managed_assets should be greater than max_withdrawable.
+        managed_assets(vault_share_asset)
     }
 
     #[storage(read)]
@@ -385,21 +343,21 @@ impl SRC6 for Contract {
         underlying_asset: AssetId,
         vault_sub_id: SubId,
     ) -> Option<u64> {
-        if underlying_asset == AssetId::base() {
+        let vault_share_asset = vault_asset_id(underlying_asset, vault_sub_id).0;
+        match storage.vault_info.get(vault_share_asset).try_read() {
             // This is the max value of u64 minus the current managed_assets. Ensures that the sum will always be lower than u64::MAX.
-            Some(u64::max() - managed_assets(underlying_asset))
-        } else {
-            None
+            Some(vault_info) => Some(u64::max() - vault_info.managed_assets),
+            None => None,
         }
     }
 
     #[storage(read)]
     fn max_withdrawable(underlying_asset: AssetId, vault_sub_id: SubId) -> Option<u64> {
-        if underlying_asset == AssetId::base() {
-            // In this implementation total_assets and max_withdrawable are the same. However in case of lending out of assets, total_assets should be greater than max_withdrawable.
-            Some(managed_assets(underlying_asset))
-        } else {
-            None
+        let vault_share_asset = vault_asset_id(underlying_asset, vault_sub_id).0;
+        // In this implementation managed_assets and max_withdrawable are the same. However in case of lending out of assets, total_assets should be greater than max_withdrawable.
+        match storage.vault_info.get(vault_share_asset).try_read() {
+            Some(vault_info) => Some(vault_info.managed_assets),
+            None => None,
         }
     }
 }
