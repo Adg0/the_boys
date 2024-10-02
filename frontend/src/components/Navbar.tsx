@@ -61,8 +61,8 @@ const Navbar = () => {
         <div className="text-white text-xl py-2 px-5 flex justify-between mt-5" style={{backgroundColor: "rgb(8, 19, 31)", color: "rgb(221, 251, 244)"}}>
             <div>
                 <img src={Logo} alt="logo" width={40} style={{display: "inline-block"}} className="mr-4"/>
-                <Link to="/" className="mr-4">Market</Link>
-                <Link to="/leaderboard" className="mr-4">Leaderboard</Link>
+                <Link to="/" className="mr-4 hover-blue-black">Market</Link>
+                <Link to="/leaderboard" className="mr-4 hover-blue-black">Leaderboard</Link>
             </div>
             <div>
                 {!isConnected ? (
