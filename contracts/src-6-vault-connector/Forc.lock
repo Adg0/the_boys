@@ -13,6 +13,11 @@ source = "path+from-root-ED8F275351CACC43"
 dependencies = ["std"]
 
 [[package]]
+name = "oracle_lib"
+source = "path+from-root-ED8F275351CACC43"
+dependencies = ["std"]
+
+[[package]]
 name = "src-6-vault-connector"
 source = "member"
 dependencies = [

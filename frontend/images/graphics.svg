@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
+  <defs>
+    <style>
+      .cls-1, .cls-2 {
+        fill: none;
+        stroke: #1a3054;
+        stroke-width: 2px;
+      }
+
+      .cls-2 {
+        fill-rule: evenodd;
+      }
+    </style>
+  </defs>
+  <circle class="cls-1" cx="512" cy="512" r="170"/>
+  <circle class="cls-1" cx="512" cy="512" r="505"/>
+  <circle class="cls-1" cx="10" cy="342" r="331"/>
+  <circle class="cls-1" cx="169" cy="850" r="165"/>
+  <path id="Line_1" data-name="Line 1" class="cls-2" d="M1018,3h0Z"/>
+  <path id="Line_2" data-name="Line 2" class="cls-2" d="M7,1019v0Z"/>
+  <path id="Line_3" data-name="Line 3" class="cls-2" d="M1012,1017h0Z"/>
+  <path id="Line_4" data-name="Line 4" class="cls-2" d="M1015,1008v0Z"/>
+  <path id="Line_5" data-name="Line 5" class="cls-2" d="M676,1V1Z"/>
+  <path id="Line_6" data-name="Line 6" class="cls-2" d="M342,0V0Z"/>
+  <path id="Line_7" data-name="Line 7" class="cls-2" d="M1035,682h0Z"/>
+  <path id="Line_8" data-name="Line 8" class="cls-2" d="M678,670l340,341Z"/>
+  <path id="Line_9" data-name="Line 9" class="cls-2" d="M4,340H4Z"/>
+  <path id="Line_10" data-name="Line 10" class="cls-2" d="M342,512h0Z"/>
+</svg>

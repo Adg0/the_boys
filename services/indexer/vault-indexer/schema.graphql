@@ -1,0 +1,28 @@
+type SVC_StrLog {
+  id: ID!
+}
+
+type SVC_Liquidated {
+  id: ID!
+}
+
+type SVC_Deposit {
+  id: ID!
+}
+
+type SVC_Withdraw {
+  id: ID!
+}
+
+type SVC_Repayment {
+  id: ID!
+}
+
+type SVC_CollateralDeposited {
+  id: ID!
+}
+
+type SVC_BorrowedLog {
+  id: ID!
+}
+
