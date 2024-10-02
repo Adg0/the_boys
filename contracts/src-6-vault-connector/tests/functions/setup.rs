@@ -107,10 +107,44 @@ pub mod abi_calls {
         contract.methods().set_decimals(asset,decimals).call().await.unwrap();
     }
 
+    pub async fn configure_compv(contract: &VaultConnector<WalletUnlocked>, contract_id: ContractId) {
+        contract.methods().configure_compv(contract_id).call().await.unwrap().value
+    }
+
     pub async fn deposit_collateral(contract: &VaultConnector<WalletUnlocked>, user: Identity, asset_id: AssetId, amount: u64) -> u64 {
         contract
             .methods()
             .deposit_collateral(user.clone())
+            .call_params(
+                CallParameters::default()
+                .with_amount(amount)
+                .with_asset_id(asset_id)
+            )
+            .unwrap()
+            .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
+            .call()
+            .await.unwrap().value
+    }
+
+    pub async fn borrow_a(contract: &VaultConnector<WalletUnlocked>, user: Identity, asset_id: AssetId, borrow_asset_id: AssetId, amount: u64) -> u64 {
+        contract
+            .methods()
+            .borrow_a(user.clone(), borrow_asset_id)
+            .call_params(
+                CallParameters::default()
+                .with_amount(amount)
+                .with_asset_id(asset_id)
+            )
+            .unwrap()
+            .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
+            .call()
+            .await.unwrap().value
+    }
+
+    pub async fn deposit(contract: &VaultConnector<WalletUnlocked>, receiver: Identity, vault_sub_id: Bits256, asset_id: AssetId, amount: u64) -> u64 {
+        contract
+            .methods()
+            .deposit(receiver.clone(), vault_sub_id)
             .call_params(
                 CallParameters::default()
                 .with_amount(amount)
