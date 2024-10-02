@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="https://img.icons8.com/?size=512&id=55494&format=png" width="20%" alt="THE_BOYS-logo">
+  <img src="./docs/vaught.png" width="20%" alt="THE_BOYS-logo">
 </p>
 <p align="center">
     <h1 align="center">THE_BOYS</h1>
@@ -60,37 +60,6 @@ Borrowers are incentivized with Compound-V token.
 The utility of Compound-V token is a share of protocol revenue.
 
 The project is implemented using SRC6 vaults, predicates and envio indexer.</p>
-
----
-
-## Features
-
-### Claim and Fee converter
-
-Protocols in decentralised finance (DeFi) often generate revenues by accruing fees across a range of markets in a variety of different asset types. The default behaviour of the protocol will typically be to hold all these asset types on the protocol’s balance sheet as protocol-owned liquidity (POL). However, this will often be a suboptimal use of accrued fees.
-
-#### Dutch Auction
-
-The mechanism involves a Dutch auction where the price starts high and decreases over time. The first person to pay the auction price at a certain point is allowed to claim all the assets in the treasury.
-
-![Compound-V][def]
-
-### Equation
-
-$$ initPrice - initPrice \* timePassed / epochPeriod $$
-
-### Gallery
-
-![Vault][def1]
-![Borrowing Flow][def2]
-![Liquidation Flow][def3]
-![Temp-V][def4]
-
-[def]: ./docs/compv.png
-[def1]: ./docs/vault.png
-[def2]: ./docs/borrow.png
-[def3]: ./docs/liquidation.png
-[def4]: ./docs/tempv.png
 
 ---
 
@@ -362,12 +331,39 @@ Contributions are welcome! Here are several ways you can contribute:
 
 ---
 
+## Features
+
+### Claim and Fee converter
+
+Protocols in decentralised finance (DeFi) often generate revenues by accruing fees across a range of markets in a variety of different asset types. The default behaviour of the protocol will typically be to hold all these asset types on the protocol’s balance sheet as protocol-owned liquidity (POL). However, this will often be a suboptimal use of accrued fees.
+
+#### Dutch Auction
+
+The mechanism involves a Dutch auction where the price starts high and decreases over time. The first person to pay the auction price at a certain point is allowed to claim all the assets in the treasury.
+
+![Compound-V][def]
+
+### Equation
+
+$$ initPrice - initPrice * timePassed / epochPeriod $$
+
+### Gallery
+
+![Vault][def1]
+![Borrowing Flow][def2]
+![Liquidation Flow][def3]
+![Temp-V][def4]
+
+[def]: ./docs/compv.png
+[def1]: ./docs/vault.png
+[def2]: ./docs/borrow.png
+[def3]: ./docs/liquidation.png
+[def4]: ./docs/tempv.png
+
+---
+
 ## License
 
 This project is `unlicense` License. For more details, refer to the [LICENSE](https://choosealicense.com/licenses/unlicense/) file.
 
 ---
-
-## Acknowledgments
-
-- ***
