@@ -22,7 +22,8 @@ export default function(){
             <DrawerHeader><DrawerTitle></DrawerTitle></DrawerHeader>
             <div style={{display: "flex", justifyContent: "center"}}>
                 <DrawerTrigger>
-                    {threeDots}
+                    {/* {threeDots} */}
+                    <button className="hover-blue-black" style={{fontSize: "20px"}}>Net APY</button>
                 </DrawerTrigger>
             </div>
             <DrawerContent>
