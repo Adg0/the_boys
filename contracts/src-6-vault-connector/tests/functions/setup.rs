@@ -108,7 +108,7 @@ pub mod abi_calls {
     }
 
     pub async fn configure_compv(contract: &VaultConnector<WalletUnlocked>, contract_id: ContractId) {
-        contract.methods().configure_compv(contract_id).call().await.unwrap().value
+        contract.methods().configure_compv(contract_id).with_contract_ids(&[contract_id.clone().into()]).call().await.unwrap().value
     }
 
     pub async fn deposit_collateral(contract: &VaultConnector<WalletUnlocked>, user: Identity, asset_id: AssetId, amount: u64) -> u64 {
