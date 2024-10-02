@@ -1,7 +1,10 @@
 [project]
-authors = ["addis"]
+authors = ["adapole"]
 entry = "main.sw"
 license = "Apache-2.0"
 name = "src-6-vault-connector"
 
 [dependencies]
+standards = { git = "https://github.com/FuelLabs/sway-standards", tag = "v0.6.1" }
+oracle_lib = { path = "../oracle_lib" }
+asset_lib = { path = "../asset_lib" }

@@ -1,0 +1,44 @@
+library;
+
+// anything `pub` here will be exported as a part of this library's API
+abi Oracle {
+    /// Return the owner (node) of the oracle.
+    ///
+    /// # Additional Information
+    ///
+    /// The owner is initialized to the first deterministically generated wallet using the SDK.
+    ///
+    /// # Returns
+    ///
+    /// * [Identity] - The owner of the oracle.
+    fn owner() -> Identity;
+
+    /// Return price of asset.
+    ///
+    /// # Additional Information
+    ///
+    /// The price is `None` until the price is set for the first time.
+    /// # Returns
+    ///
+    /// * [Option<u64>] - The price of the tracked asset.
+    #[storage(read)]
+    fn price() -> Option<u64>;
+
+    #[storage(read)]
+    fn get_price_of(asset_id: AssetId) -> u64;
+
+    #[storage(write)]
+    fn set_price_of(price: u64, asset_id: AssetId);
+
+    /// Changes the price in storage to the value of `price`.
+    ///
+    /// # Arguments
+    ///
+    /// * `price`: [u64] - New price of tracked asset.
+    ///
+    /// # Reverts
+    ///
+    /// * When the message sender is not the owner.
+    #[storage(write)]
+    fn set_price(price: u64);
+}

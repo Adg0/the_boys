@@ -23,6 +23,12 @@ abi Oracle {
     #[storage(read)]
     fn price() -> Option<u64>;
 
+    #[storage(read)]
+    fn get_price_of(asset_id: AssetId) -> u64;
+
+    #[storage(write)]
+    fn set_price_of(price: u64, asset_id: AssetId);
+
     /// Changes the price in storage to the value of `price`.
     ///
     /// # Arguments
