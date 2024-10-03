@@ -20,6 +20,9 @@
 	<a href="https://crates.io/crates/forc/0.64.0" alt="forc">
         <img src="https://img.shields.io/badge/forc-v0.64.0-orange" />
     </a>
+    <a href="https://crates.io/crates/fuel-core/0.36.0" alt="fuel-core">
+        <img src="https://img.shields.io/badge/fuel--core-v0.36.0-yellow" />
+    </a>
 	<img src="https://img.shields.io/badge/GraphQL-E10098.svg?style=flat&logo=GraphQL&logoColor=white" alt="GraphQL">
 	<img src="https://img.shields.io/badge/PostCSS-DD3A0A.svg?style=flat&logo=PostCSS&logoColor=white" alt="PostCSS">
 	<img src="https://img.shields.io/badge/YAML-CB171E.svg?style=flat&logo=YAML&logoColor=white" alt="YAML">
@@ -345,7 +348,7 @@ The mechanism involves a Dutch auction where the price starts high and decreases
 
 ### Equation
 
-$$ initPrice - initPrice * timePassed / epochPeriod $$
+$$ initPrice - initPrice \* timePassed / epochPeriod $$
 
 ### Gallery
 
