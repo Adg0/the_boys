@@ -43,6 +43,7 @@ pub mod abi_calls {
         contract
             .methods()
             .set_price_of(new_price,asset_id)
+            .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
             .call()
             .await
             .unwrap()
@@ -55,6 +56,7 @@ pub mod abi_calls {
         contract
             .methods()
             .set_price(new_price)
+            .with_variable_output_policy(VariableOutputPolicy::Exactly(1))
             .call()
             .await
             .unwrap()

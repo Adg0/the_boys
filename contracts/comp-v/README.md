@@ -1,7 +1,7 @@
 <p align="center">
     <picture>
-        <source media="(prefers-color-scheme: dark)" srcset=".docs/native-asset-logo-dark-theme.png">
-        <img alt="light theme" src=".docs/Compound-v.jpg">
+        <source media="(prefers-color-scheme: dark)" srcset=".docs/Compound-v.jpg">
+        <img alt="light theme" src=".docs/Compound-v.jpg" style="max-width: 60%; height: auto;">
     </picture>
 </p>
 
@@ -11,6 +11,9 @@
     </a>
     <a href="https://crates.io/crates/fuel-core/0.36.0" alt="fuel-core">
         <img src="https://img.shields.io/badge/fuel--core-v0.36.0-yellow" />
+    </a>
+    <a href="https://crates.io/crates/fuels/0.66.1" alt="forc">
+        <img src="https://img.shields.io/badge/fuels-v0.66.1-blue" />
     </a>
 </p>
 
