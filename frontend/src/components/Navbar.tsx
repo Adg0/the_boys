@@ -28,11 +28,11 @@ const Navbar = () => {
             await connect();
             // console.log("Connection state", isConnected);
             // if (isConnected) {
-                toast({
-                    title: 'Success',
-                    description: 'Wallet connected!!!',
-                    variant: 'online'
-                  });
+                // toast({
+                //     title: 'Success',
+                //     description: 'Wallet connected!!!',
+                //     variant: 'online'
+                //   });
             // } 
             // if (error) 
             //     toast({
