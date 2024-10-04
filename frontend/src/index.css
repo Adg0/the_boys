@@ -92,3 +92,18 @@ tbody{
   -webkit-appearance: none; /* Remove arrows */
   margin: 0; /* Remove margin */
 }
+
+.hover-blue-black {
+  background-color: #0e2135;
+  display: inline-block;
+  text-align: center;
+  width: 160px;
+  padding: 8px 16px;
+  border-radius: 4px;
+  transition: background-color 300ms;
+  box-shadow: 2px 2px 2px #080808;
+}
+
+.hover-blue-black:hover {
+  background-color: #153252;
+}

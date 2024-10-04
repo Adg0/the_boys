@@ -14,7 +14,7 @@ export default function Leaderboard(){
 
     return (
         <div className="p-4">
-            <TopGraphics />
+            <TopGraphics showLogo={true} />
             <div
                 style={{fontSize: "20px", borderBottom: "1px solid rgb(100, 100, 100)"}} 
                 >

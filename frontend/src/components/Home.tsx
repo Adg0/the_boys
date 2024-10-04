@@ -12,7 +12,7 @@ export default function Home(){
     return (
         <div className="p-4">
             <Drawer />
-            <TopGraphics />
+            <TopGraphics showLogo={true} />
             <MarketTable rows={rows} headers={headers} />
         </div>
     );

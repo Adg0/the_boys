@@ -6,6 +6,7 @@ import {
     DrawerTitle,
     DrawerTrigger,
   } from "@/components/ui/drawer";
+import { X } from 'lucide-react'
 import { Button } from "./ui/button";
 
 
@@ -22,7 +23,8 @@ export default function(){
             <DrawerHeader><DrawerTitle></DrawerTitle></DrawerHeader>
             <div style={{display: "flex", justifyContent: "center"}}>
                 <DrawerTrigger>
-                    {threeDots}
+                    {/* {threeDots} */}
+                    <button className="hover-blue-black" style={{fontSize: "20px"}}>Net Gains 🙏</button>
                 </DrawerTrigger>
             </div>
             <DrawerContent>
@@ -45,8 +47,8 @@ export default function(){
                         </div>
                     </div>
                 </div>
-                <DrawerClose style={{position: "absolute", top: "4px", right: "4px"}}>
-                    <Button variant="outline" className="text-xl">x</Button>
+                <DrawerClose style={{position: "absolute", top: "10px", right: "10px"}}>
+                    <X className="h-6 w-6" />
                 </DrawerClose>
             </DrawerContent>
         </Drawer>
