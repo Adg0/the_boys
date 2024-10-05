@@ -4,6 +4,7 @@ import { generateMarketRows } from "@/helpers/generator";
 import MarketTable from "./MarketTable";
 import TopGraphics from "./TopGraphics";
 import Drawer from "./Drawer";
+import IntegrationTester from "./IntegrationTester"
 
 export default function Home(){
     const rows = generateMarketRows();
@@ -14,6 +15,7 @@ export default function Home(){
             <Drawer />
             <TopGraphics showLogo={true} />
             <MarketTable rows={rows} headers={headers} />
+            <IntegrationTester />
         </div>
     );
 }
