@@ -19,6 +19,7 @@ import {
 import SupplyDialog from "./SupplyDialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useNavigate } from "react-router-dom";
+import BorrowDialog from "./BorrowDialog";
 
 type ImageMap = {
     [key: string]: string;
@@ -90,7 +91,15 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                                         </DialogContent>
                                     </Dialog>
                                 </span>
-                                <span style={{...buttonStyle, border: "1px solid rgba(0, 255, 255, 0.25)", fontSize: "14px", padding: "8px 16px", fontWeight: "bold", marginLeft: "8px"}}>Borrow</span>
+                                <span style={{...buttonStyle, border: "1px solid rgba(0, 255, 255, 0.25)", fontSize: "14px", padding: "8px 16px", fontWeight: "bold", marginLeft: "12px"}} className="hover:bg-gray-600 text-sm">
+                                    <Dialog>
+                                        <DialogTrigger>Borrow</DialogTrigger>
+                                        <DialogContent>
+                                            <DialogTitle><p style={{fontSize: "28px"}}>Supply</p></DialogTitle>
+                                            <BorrowDialog product={row[0]} />
+                                        </DialogContent>
+                                    </Dialog>
+                                </span>
                             </td>
                         </tr>
                     ))
