@@ -95,7 +95,6 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                                     <Dialog>
                                         <DialogTrigger>Borrow</DialogTrigger>
                                         <DialogContent>
-                                            <DialogTitle><p style={{fontSize: "28px"}}>Supply</p></DialogTitle>
                                             <BorrowDialog product={row[0]} />
                                         </DialogContent>
                                     </Dialog>
