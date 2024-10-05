@@ -1,0 +1,6 @@
+[workspace]
+members = [
+    "comp-v",
+    "oracle",
+    "src-6-vault-connector",
+]

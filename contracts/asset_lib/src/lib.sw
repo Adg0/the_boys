@@ -34,8 +34,6 @@ abi Compv {
     /// Initialized owner
     #[storage(read, write)]
     fn constructor(owner: Identity);
-    /// Event when contract created
-    fn emit_src20_events();
 
     
     /// Mints new assets using the `sub_id` sub-identifier set to SubId::zero()
@@ -43,6 +41,7 @@ abi Compv {
     /// # Arguments
     ///
     /// * `recipient`: [Identity] - The user to which the newly minted assets are transferred to.
+    /// * `sub_id`: Option<SubId> - The SubId for the asset being minted
     /// * `amount`: [u64] - The quantity of coins to mint.
     ///
     /// # Reverts
@@ -51,11 +50,11 @@ abi Compv {
     ///
     /// # Number of Storage Accesses
     ///
-    /// * Reads: `1`
-    /// * Writes: `1`
+    /// * Reads: `3`
+    /// * Writes: `3`
     ///
     #[storage(read, write)]
-    fn mint(recipient: Identity, amount: u64);
+    fn mint(recipient: Identity, sub_id: Option<SubId>, amount: u64);
     
     /// Burns assets sent with the given `sub_id`.
     ///
@@ -67,6 +66,7 @@ abi Compv {
     /// # Reverts
     ///
     /// * When the `amount` provided and transaction amount do not match.
+    /// * When the `msg_asset_id` provided and the `asset_id` from the `SubId` provided does not match
     ///
     /// # Number of Storage Accesses
     ///
@@ -75,7 +75,7 @@ abi Compv {
     ///
     #[payable]
     #[storage(read, write)]
-    fn burn(amount: u64);
+    fn burn(sub_id: SubId, amount: u64);
 
     /// Returns the total number of individual assets for a contract.
     ///
@@ -220,4 +220,108 @@ abi Compv {
     /// ```
     #[storage(read)]
     fn owner() -> State;
+
+    /// Sets the name of an asset.
+    ///
+    /// # Arguments
+    ///
+    /// * `asset`: [AssetId] - The asset of which to set the name.
+    /// * `name`: [String] - The name of the asset.
+    ///
+    /// # Reverts
+    ///
+    /// * When the caller is not the contract owner.
+    /// * When the name has already been set for an asset.
+    ///
+    /// # Number of Storage Accesses
+    ///
+    /// * Reads: `1`
+    /// * Writes: `2`
+    ///
+    /// # Examples
+    ///
+    /// ```sway
+    /// use sway_libs::asset::SetAssetAttributes;
+    /// use standards::src20::SRC20;
+    /// use std::string::String;
+    ///
+    /// fn foo(asset: AssetId) {
+    ///     let set_abi = abi(SetAssetAttributes, contract_id);
+    ///     let src_20_abi = abi(SRC20, contract_id);
+    ///     let name = String::from_ascii_str("Ether");
+    ///     set_abi.set_name(storage.name, asset, name);
+    ///     assert(src_20_abi.name(asset) == name);
+    /// }
+    /// ```
+    #[storage(write)]
+    fn set_name(asset: AssetId, name: String);
+
+    /// Sets the symbol of an asset.
+    ///
+    /// # Arguments
+    ///
+    /// * `asset`: [AssetId] - The asset of which to set the symbol.
+    /// * `symbol`: [String] - The symbol of the asset.
+    ///
+    /// # Reverts
+    ///
+    /// * When the caller is not the contract owner.
+    /// * When the symbol has already been set for an asset.
+    ///
+    /// # Number of Storage Accesses
+    ///
+    /// * Reads: `1`
+    /// * Writes: `2`
+    ///
+    /// # Examples
+    ///
+    /// ```sway
+    /// use asset::SetAssetAttributes;
+    /// use standards::src20::SRC20;
+    /// use std::string::String;
+    ///
+    /// fn foo(asset: AssetId) {
+    ///     let set_abi = abi(SetAssetAttributes, contract_id);
+    ///     let src_20_abi = abi(SRC20, contract_id);
+    ///     let symbol = String::from_ascii_str("ETH");
+    ///     set_abi.set_symbol(storage.name, asset, symbol);
+    ///     assert(src_20_abi.symbol(asset) == symbol);
+    /// }
+    /// ```
+    #[storage(write)]
+    fn set_symbol(asset: AssetId, symbol: String);
+
+    /// Sets the decimals of an asset.
+    ///
+    /// # Arguments
+    ///
+    /// * `asset`: [AssetId] - The asset of which to set the decimals.
+    /// * `decimal`: [u8] - The decimals of the asset.
+    ///
+    /// # Reverts
+    ///
+    /// * When the caller is not the contract owner.
+    /// * When the decimals has already been set for an asset.
+    ///
+    /// # Number of Storage Accesses
+    ///
+    /// * Reads: `1`
+    /// * Writes: `1`
+    ///
+    /// # Examples
+    ///
+    /// ```sway
+    /// use sway_libs::asset::SetAssetAttributes;
+    /// use standards::src20::SRC20;
+    ///
+    /// fn foo(asset: AssetId) {
+    ///     let decimals = 8u8;
+    ///     let set_abi = abi(SetAssetAttributes, contract_id);
+    ///     let src_20_abi = abi(SRC20, contract_id);
+    ///     set_abi.set_decimals(asset, decimals);
+    ///     assert(src_20_abi.decimals(asset) == decimals);
+    /// }
+    /// ```
+    #[storage(write)]
+    fn set_decimals(asset: AssetId, decimals: u8);
 }

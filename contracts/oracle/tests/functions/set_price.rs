@@ -3,7 +3,8 @@ use crate::functions::owner::{ test_helpers::setup, abi_calls::{ price, set_pric
 
 mod success {
     use super::*;
-    // use ::events::PriceUpdateEvent;
+    use crate::functions::owner::abigen_bindings::oracle_mod::events::PriceUpdateEvent;
+
     /// Event for when the price of an asset is updated.
     // #[derive(Debug, PartialEq, Parameterize, Tokenizable)]
     // struct PriceUpdateEvent {
@@ -20,22 +21,16 @@ mod success {
         let price = price(&user.oracle).await;
 
         let log = response
-            // .decode_logs();
-            // .decode_logs_with_type::<PriceUpdateEvent>()
-            .decode_logs_with_type::<u64>()
+            .decode_logs_with_type::<PriceUpdateEvent>()
             .unwrap();
         
-        // println!("{:?}", log);
         let event = log.first().unwrap();
-        // println!("{:?}", event);
+        
         assert_eq!(
-            *event, set_price_amount
+            *event, PriceUpdateEvent {
+                price: set_price_amount
+            }
         );
-        // assert_eq!(
-        //     *event, PriceUpdateEvent {
-        //         price: set_price_amount
-        //     }
-        // );
         assert_eq!(price, Some(set_price_amount));
     }
 }

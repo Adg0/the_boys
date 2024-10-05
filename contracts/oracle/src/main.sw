@@ -7,13 +7,17 @@ mod interface;
 
 use ::data_structures::State;
 use ::errors::AccessError;
-use ::events::{PriceUpdateEvent,PriceOfUpdateEvent};
+use ::events::{PriceOfUpdateEvent, PriceUpdateEvent};
 use ::interface::Oracle;
 use std::hash::Hash;
 
+/// The Owner of this contract at deployment.
+#[allow(dead_code)]
+const INITIAL_OWNER: Address = Address::from(0x09c0b2d1a486c439a87bcba6b46a7a1a23f3897cc83a94521a96da5c23bc58db);
+
 configurable {
     /// Owner of the contract.
-    OWNER: Identity = Identity::Address(Address::from(0x09c0b2d1a486c439a87bcba6b46a7a1a23f3897cc83a94521a96da5c23bc58db)),
+    OWNER: Identity = Identity::Address(INITIAL_OWNER),
 }
 
 storage {
@@ -41,9 +45,12 @@ impl Oracle for Contract {
         require(msg_sender().unwrap() == OWNER, AccessError::NotOwner);
 
         storage.price_of.insert(asset_id, price);
-        
+
         log(price);
-        log(PriceOfUpdateEvent { price, asset: asset_id });
+        log(PriceOfUpdateEvent {
+            price,
+            asset: asset_id,
+        });
     }
 
     #[storage(read)]
@@ -57,7 +64,6 @@ impl Oracle for Contract {
 
         storage.price.write(Option::Some(price));
 
-        log(price);
         log(PriceUpdateEvent { price });
     }
 }
