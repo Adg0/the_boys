@@ -115,7 +115,7 @@ const VaultDetails = () => {
     return (<div>
         <div className="relative">
             <div style={{position: "absolute", top: "0", left: "0", width: "100%", zIndex: "-1"}}>
-                <TopGraphics showLogo={false} />
+                <TopGraphics showLogo={false} slogan="" />
             </div>
             {row ? <Contents /> : "Error"}
         </div>

@@ -2,10 +2,11 @@ import Graphics from '../../images/graphics.svg';
 import Vaught from '../../images/vaught.png';
 
 interface MyComponentProps {
-	showLogo: boolean;
-}
+    showLogo: boolean,
+    slogan: string,
+};
 
-const TopGraphics: React.FC<MyComponentProps> = ({ showLogo = true }) => {
+const TopGraphics: React.FC<MyComponentProps> = ({ showLogo = true, slogan = "" }) => {
 	return (
 		<div
 			style={{
@@ -28,6 +29,18 @@ const TopGraphics: React.FC<MyComponentProps> = ({ showLogo = true }) => {
 					borderRadius: '50%',
 				}}
 			></div>
+            <div
+                style={{
+                    position: "absolute",
+                    fontSize: "20px",
+                    top: "260px",
+                    left: "200px",
+                    zIndex: "-1",
+                    width: "400px",
+                    display: "flex",
+                    justifyContent: "center"}}>
+                <p>{slogan}</p>
+            </div>
 			<img
 				src={Graphics}
 				alt='graphics'
@@ -49,7 +62,6 @@ const TopGraphics: React.FC<MyComponentProps> = ({ showLogo = true }) => {
 							width: '160px',
 						}}
 					/>
-					Join the DeFi Revolution (Before It's Over)
 				</div>
 			) : (
 				''

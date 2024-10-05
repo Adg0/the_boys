@@ -12,7 +12,7 @@ export default function Home(){
     return (
         <div className="p-4">
             <Drawer />
-            <TopGraphics showLogo={true} />
+            <TopGraphics showLogo={true} slogan="Join the DeFi Revolution (Before It's Over)" />
             <MarketTable rows={rows} headers={headers} />
         </div>
     );
