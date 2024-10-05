@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Logo from "../../images/logo.png";
 import { useConnectUI, useIsConnected, useAccounts, useDisconnect } from '@fuels/react';
 import { useToast } from '@/hooks/use-toast';
@@ -15,6 +15,8 @@ const copyIcon = <svg version="1.1" width="16" height="16" id="Layer_1" xmlns="h
 const Navbar = () => {
 
     const [avatarOpen, setAvatarOpen] = useState(false);
+
+    const location = useLocation();
 
     const { toast } = useToast();
     const { connect, isConnecting } = useConnectUI();
@@ -61,8 +63,8 @@ const Navbar = () => {
         <div className="text-white text-xl py-2 px-5 flex justify-between mt-5" style={{backgroundColor: "rgb(8, 19, 31)", color: "rgb(221, 251, 244)"}}>
             <div>
                 <img src={Logo} alt="logo" width={40} style={{display: "inline-block"}} className="mr-4"/>
-                <Link to="/" className="ml-8 mr-4 hover-blue-black">Market</Link>
-                <Link to="/leaderboard" className="mr-4 hover-blue-black">Leaderboard</Link>
+                <Link style={{ border: location?.pathname === "/" ? "1px solid rgba(59, 130, 246, 0.5)" : "none"}} to="/" className="ml-8 mr-4 hover-blue-black">Market</Link>
+                <Link style={{ border: location?.pathname === "/leaderboard" ? "1px solid rgba(59, 130, 246, 0.5)" : "none"}} to="/leaderboard" className="mr-4 hover-blue-black">Leaderboard</Link>
             </div>
             <div>
                 {!isConnected ? (
