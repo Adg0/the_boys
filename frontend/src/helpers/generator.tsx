@@ -1,14 +1,8 @@
 const projects = [
-    "Euler Prime USDC",
-    "Stablecoin Maxi USDC",
-    "Apostro Lido Ecosystem",
-    "Aave",
-    "SushiSwap",
-    "RenVM",
-    "Anchor Protocol",
-    "Badger DAO",
-    "Alpha Homora"
-  ];
+    "USD Coin",
+    "USD Tether",
+    "Ethereum",
+];
 
   
   const supes = ["Homelander", "Stormfront", "Queen Maeve", "Black Noir", "A-Train", "Translucent", "The Deep", "Starlight", "Lamplighter", "Jack from Jupiter", "Eagle the Archer", "Popclaw"];

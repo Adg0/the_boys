@@ -3,15 +3,9 @@
 import { useLocation } from "react-router-dom";
 import TopGraphics from "./TopGraphics";
 
-import Aave from "../../images/aave.png";
-import Alpha from "../../images/alpha_homora.png";
-import Anchor from "../../images/anchor_protocol.jpg";
-import Apostro from "../../images/apostro_lido.png";
-import Badger from "../../images/badger_dao.png";
 import Euler from "../../images/euler_prime_usdc.png";
-import Ren from "../../images/ren_vm.png";
-import Stable from "../../images/stable_coin.png";
-import Sushi from "../../images/sushi_swap.png";
+import Tether from "../../images/tether.png";
+import Ethereum from "../../images/ethereum.svg";
 
 import { Dialog, DialogTrigger, DialogContent, DialogTitle } from "./ui/dialog";
 import SupplyDialog from "./SupplyDialog";
@@ -24,15 +18,9 @@ type ImageMap = {
 };
 
 const imageRef: ImageMap = {
-    "Euler Prime USDC": Euler,
-    "Stablecoin Maxi USDC": Stable,
-    "Apostro Lido Ecosystem": Apostro,
-    "Aave": Aave,
-    "SushiSwap": Sushi,
-    "RenVM": Ren,
-    "Anchor Protocol": Anchor,
-    "Badger DAO": Badger,
-    "Alpha Homora": Alpha
+    "USD Coin": Euler,
+    "USD Tether": Tether,
+    "Ethereum": Ethereum,
 };
 
 const imageRefKeys = Object.keys(imageRef);

@@ -16,32 +16,14 @@ type optionsType = {
 };
 
 const options: optionsType = {
-    "Euler Prime USDC": {
-        option: "Euler Prime USDC", amount: 10.50, walletBalance: 500, depositValue: 0, supplyAPY: 0.22, healthFactor: 50, timeToLiquidation: 10_000
+    "USD Coin": {
+        option: "USD Coin", amount: 10.50, walletBalance: 500, depositValue: 0, supplyAPY: 0.22, healthFactor: 50, timeToLiquidation: 10_000
     },
-    "Stablecoin Maxi USDC": {
-        option: "Stablecoin Maxi USDC", amount: 0.50, walletBalance: 1500, depositValue: 1000, supplyAPY: 71.54, healthFactor: 150, timeToLiquidation: 50_000
+    "USD Tether": {
+        option: "USD Tether", amount: 0.50, walletBalance: 1500, depositValue: 1000, supplyAPY: 71.54, healthFactor: 150, timeToLiquidation: 50_000
     },
-    "Apostro Lido Ecosystem": {
-        option: "Apostro Lido Ecosystem", amount: 2000, walletBalance: 50, depositValue: 125, supplyAPY: 0.01, healthFactor: -40, timeToLiquidation: 400
-    },
-    "Aave": {
-        option: "Aave", amount: 10.50, walletBalance: 500, depositValue: 0, supplyAPY: 0.22, healthFactor: 50, timeToLiquidation: 10_000
-    },
-    "SushiSwap": {
-        option: "SushiSwap", amount: 0.50, walletBalance: 1500, depositValue: 1000, supplyAPY: 71.54, healthFactor: 150, timeToLiquidation: 50_000
-    },
-    "RenVM": {
-        option: "RenVM", amount: 2000, walletBalance: 50, depositValue: 125, supplyAPY: 0.01, healthFactor: -40, timeToLiquidation: 400
-    },
-    "Anchor Protocol": {
-        option: "Anchor Protocol", amount: 10.50, walletBalance: 500, depositValue: 0, supplyAPY: 0.22, healthFactor: 50, timeToLiquidation: 10_000
-    },
-    "Badger DAO": {
-        option: "Badger DAO", amount: 0.50, walletBalance: 1500, depositValue: 1000, supplyAPY: 71.54, healthFactor: 150, timeToLiquidation: 50_000
-    },
-    "Alpha Homora": {
-        option: "Alpha Homora", amount: 2000, walletBalance: 50, depositValue: 125, supplyAPY: 0.01, healthFactor: -40, timeToLiquidation: 400
+    "Ethereum": {
+        option: "Ethereum", amount: 2000, walletBalance: 50, depositValue: 125, supplyAPY: 0.01, healthFactor: -40, timeToLiquidation: 400
     },
 };
 
