@@ -5,15 +5,22 @@ import {
   useIsConnected,
   useWallet,
 } from "@fuels/react";
-import { CompV } from "../sway-api";
-import { BigNumberish, BN } from "fuels";
+import { CompV, Oracle, Src6VaultConnector } from "../sway-api";
+import { arrayify, BigNumberish, BN, hexlify } from "fuels";
+import { useToast } from "@/hooks/use-toast";
 
-const CONTRACT_ID = import.meta.env.VITE_COMP_V_ID;
+const ASSET_ID = import.meta.env.VITE_ASSET_ID;
+const COMPV_ID = import.meta.env.VITE_COMP_V_ID;
 const VAULT_ID = import.meta.env.VITE_VAULT_ID;
 const ORACLE_ID = import.meta.env.VITE_ORACLE_ID;
 
 export default function(){
-    const [contract, setContract] = useState<CompV>();
+  const {toast} = useToast()
+  const [compv, setCompv] = useState<CompV>();
+  const [assetLib, setAssetLib] = useState<CompV>();
+  const [vault, setVault] = useState<Src6VaultConnector>();
+  const [oracle, setOracle] = useState<Oracle>()
+  const [shares, setShares] = useState<number>()
   const [totalAssets, setTotalAssets] = useState<number>();
   const { connect, isConnecting } = useConnectUI();
   const { isConnected } = useIsConnected();
@@ -26,14 +33,30 @@ export default function(){
   useEffect(() => {
     async function getInitialAssets() {
       if (isConnected && wallet) {
-        const compvContract = new CompV(
-          CONTRACT_ID,
+        const assetContract = new CompV(
+          ASSET_ID,
           wallet
         );
-        console.log(CONTRACT_ID);
-        await getTotalAssets(compvContract);
-        setContract(compvContract);
-        
+        setAssetLib(assetContract);
+
+        const compvContract = new CompV(
+          COMPV_ID,
+          wallet
+        );
+        await getTotalAssets(assetContract);
+        setCompv(compvContract);
+
+        const oracleContract = new Oracle(
+          ORACLE_ID,
+          wallet
+        )
+        setOracle(oracleContract)
+
+        const vaultContract = new Src6VaultConnector(
+          VAULT_ID,
+          wallet
+        )
+        setVault(vaultContract)
       }
     }
  
@@ -48,31 +71,156 @@ export default function(){
       console.error(error);
     }
   };
+
+  const depositAsset = async (amount: BN, assetId: string) => {
+    if (!vault) {
+      return alert("Contract not loaded");
+    }
+    try {
+      let assets = await wallet!.getBalances();
+      console.log(assets);
+      
+      const addressIdentityInput = getSender();
+      const vault_sub_id: Uint8Array = new Uint8Array(32).fill(1);
+      const subId: string = hexlify(vault_sub_id);
+
+      // const response  = await vault.functions.max_depositable(addressIdentityInput!, {bits: assetId},subId)
+      const response  = await vault.functions
+      .deposit(addressIdentityInput!,subId)//{bits: assetId},
+      .txParams({ 
+        variableOutputs: 1,
+      })
+      .callParams({
+        forward: {
+          amount: amount,
+          assetId: arrayify(assetId),
+        },
+      })
+      .call();
+
+      const share = await response.waitForResult();
+      console.log(share);
+      setShares(share.value.toNumber());
+      toast({
+            title: 'Transaction Success',
+            description: response.transactionId,
+            variant: 'online'
+          });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const depositCollateral = async (amount: BN, assetId: string) => {
+    if (!vault) {
+      return alert("Contract not loaded");
+    }
+    try {
+      let assets = await wallet!.getBalances();
+      console.log(assets);
+      
+      const addressIdentityInput = getSender();      
+
+      // const response  = await vault.functions.max_depositable(addressIdentityInput!, {bits: assetId},subId)
+      const response  = await vault.functions
+      .deposit_collateral(addressIdentityInput!)//{bits: assetId},
+      .txParams({ 
+        variableOutputs: 1,
+      })
+      .callParams({
+        forward: {
+          amount: amount,
+          assetId: arrayify(assetId),
+        },
+      })
+      .call();
+
+      const deposited = await response.waitForResult();
+      console.log(deposited);
+      setShares(deposited.value.toNumber());
+      toast({
+            title: 'Transaction Success',
+            description: response.transactionId,
+            variant: 'online'
+          });
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  const borrowAsset = async (amount: BN, assetId: string, borrowAssetId: string) => {
+    if (!vault || !compv) {
+      return alert("Contract not loaded");
+    }
+    try {
+      // let assets = await wallet!.getBalances();
+      // console.log(assets);
+      
+      const addressIdentityInput = getSender();
+      // const vault_sub_id: Uint8Array = new Uint8Array(32).fill(1);
+      // const subId: string = hexlify(vault_sub_id);
+
+      // const response  = await vault.functions.max_depositable(addressIdentityInput!, {bits: assetId},subId)
+      const response  = await vault.functions
+      .borrow_a(addressIdentityInput!,{bits: borrowAssetId})
+      .txParams({ 
+        variableOutputs: 1,
+      })
+      .callParams({
+        forward: {
+          amount: amount,
+          assetId: arrayify(assetId),
+        },
+      })
+      .addContracts([compv])
+      .call();
+
+      const share = await response.waitForResult();
+      console.log(share);
+      // setShares(share.value.toNumber());
+      toast({
+            title: 'Transaction Success',
+            description: response.transactionId,
+            variant: 'online'
+          });
+    } catch (error) {
+      console.error(error);
+    }
+  }
   //     const contractIdInput = { bits: contractId.toString() };
   // const contractIdentityInput = { ContractId: contractIdInput };
 
   const mint = async () => {
-    if (!contract) {
+    if (!assetLib) {
       return alert("Contract not loaded");
     }
     
     try {
-        if (!wallet) return alert("Wallet not connected")
-        const addressInput = {bits: wallet.address.toB256()}
-        const addressIdentityInput = { Address: addressInput };
+        
+      const addressIdentityInput = getSender();
 
-        const subId: string | undefined = "0x2000000000000000000000000000000000000000000000000000000000000000";
+      const sub_id: Uint8Array = new Uint8Array(32).fill(2);
+      const subId: string = hexlify(sub_id);
+        // const subId: string | undefined = "0x2000000000000000000000000000000000000000000000000000000000000000";
 
-        const amount: BigNumberish = new BN(1000);
+      const amount: BigNumberish = new BN(1000000);
 
-      // await contract.functions.constructor(addressIdentityInput).call();
+      // await assetLib.functions.constructor(addressIdentityInput).call();
 
-      await contract.functions.mint(addressIdentityInput,subId,amount).call();
-      await getTotalAssets(contract);
+      await assetLib.functions.mint(addressIdentityInput!,subId,amount).call();
+      await getTotalAssets(assetLib);
     } catch (error) {
       console.error(error);
     }
   };
+
+  const getSender = () => {
+    if (!wallet) return alert("Wallet not connected")
+      const addressInput = {bits: wallet.address.toB256()}
+      const addressIdentityInput = { Address: addressInput };
+
+      return addressIdentityInput
+  }
 
 
     return (<div style={styles.root}>
@@ -95,9 +243,21 @@ export default function(){
                   to increment the counter.
                 </p>
               ) : (
-                <button onClick={mint} style={styles.button}>
-                  Mint CompV
-                </button>
+                <div>
+                  <p>Balance: {balance?.toNumber()}</p>
+                  {/* <button onClick={mint} style={styles.button}>
+                    Mint CompV
+                  </button> */}
+                  <button style={styles.button} onClick={async ()=>await depositAsset(new BN(1000),"0x1298fadaa13d3203c686f4f7b4a110d9b5e01ef30a5eed39bc8d439d68106eab")}>
+                    Deposit 1k
+                  </button>
+                  <button style={styles.button} onClick={async () => await depositCollateral(new BN(1000), "0x1298fadaa13d3203c686f4f7b4a110d9b5e01ef30a5eed39bc8d439d68106eab")}>
+                    DepositCollateral 1k
+                  </button>
+                  <button style={styles.button} onClick={async () => await borrowAsset(new BN(100), "0x1298fadaa13d3203c686f4f7b4a110d9b5e01ef30a5eed39bc8d439d68106eab", "0x84e5f0e47a98492fb297a607d53e1f3a8e564274b8fd5afa6e53772dd413455a")}>
+                    Borrow 100
+                  </button>
+                </div>
               )}
    
               <p>Your Fuel Wallet address is:</p>
