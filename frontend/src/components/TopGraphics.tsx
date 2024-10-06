@@ -33,8 +33,8 @@ const TopGraphics: React.FC<MyComponentProps> = ({ showLogo = true, slogan = "" 
                 style={{
                     position: "absolute",
                     fontSize: "20px",
-                    top: "260px",
-                    left: "200px",
+                    top: "200px",
+                    left: "650px",
                     zIndex: "-1",
                     width: "400px",
                     display: "flex",
