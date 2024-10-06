@@ -43,8 +43,6 @@ const BorrowDialog:React.FC<MyComponentProps> = ({product}) => {
 
     return (<div style={{fontSize: "28px"}}>
         
-        <DialogTitle><p style={{fontSize: "28px"}}>{onBorrow ? "Borrow" : "Repay"}</p></DialogTitle>
-        
         <DialogTitle>
             <div style={{display: "flex", height: "80px", marginTop: "16px", marginBottom: "16px", padding: "8px"}}>
                 <div style={{flex: 1, display: "flex", justifyContent: "center", alignItems: "center", fontSize: "32px"}}>
