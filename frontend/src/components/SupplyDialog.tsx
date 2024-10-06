@@ -1,33 +1,8 @@
 import { useState } from "react";
+
+import useProjectStore from "@/stores/project_store";
+
 import MySwitch from "./MySwitch";
-
-type OptionDetails = {
-    option: string;
-    amount: number;
-    walletBalance: number;
-    depositValue: number;
-    supplyAPY: number;
-    healthFactor: number;
-    timeToLiquidation: number;
-};
-
-type optionsType = {
-    [key: string]: OptionDetails;
-};
-
-const options: optionsType = {
-    "USD Coin": {
-        option: "USD Coin", amount: 10.50, walletBalance: 500, depositValue: 0, supplyAPY: 0.22, healthFactor: 50, timeToLiquidation: 10_000
-    },
-    "USD Tether": {
-        option: "USD Tether", amount: 0.50, walletBalance: 1500, depositValue: 1000, supplyAPY: 71.54, healthFactor: 150, timeToLiquidation: 50_000
-    },
-    "Ethereum": {
-        option: "Ethereum", amount: 2000, walletBalance: 50, depositValue: 125, supplyAPY: 0.01, healthFactor: -40, timeToLiquidation: 400
-    },
-};
-
-const keys: string[] = Object.keys(options);
 
 interface MyComponentProps {
     product: string,
@@ -37,6 +12,9 @@ const SupplyDialog:React.FC<MyComponentProps> = ({product}) => {
 
     const [useCollateralChecked, setUseCollateralChecked] = useState(false);
     const [selectValue, setSelectValue] = useState(product);
+
+    const { options } = useProjectStore();
+    const keys: string[] = Object.keys(options);
 
     return (<div style={{fontSize: "28px"}}>
         <div style={{display: "flex", justifyContent: "end", alignItems: "center", }}>

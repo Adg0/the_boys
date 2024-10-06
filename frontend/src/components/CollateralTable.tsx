@@ -1,6 +1,8 @@
 import { generateUseRows } from "@/helpers/generator";
 import { useState } from "react";
 
+import useProjectStore from "@/stores/project_store";
+
 import Euler from "../../images/euler_prime_usdc.png";
 import Tether from "../../images/tether.png";
 import Ethereum from "../../images/ethereum.svg";
@@ -19,10 +21,12 @@ const commonHeaders = ["LLTV", "Max LTV", "Vault address"];
 const usedByHeaders = ["Collateral", ...commonHeaders];
 const usingHeaders = ["Lend", ...commonHeaders];
 
-const usedByRows: string[][] = generateUseRows();
-const usingRows: string[][] = generateUseRows();
 
 const UsedByThisVault = () => {
+
+    const { projects } = useProjectStore();
+    const usedByRows: string[][] = generateUseRows(projects);
+
     return (<div className="w-full flex justify-center text-xl text-left">
         <table style={{borderCollapse: "separate", borderSpacing: "0", borderRadius: "16px", border: "2px solid rgb(0, 50, 50)", width: "90%"}}>
             
@@ -58,6 +62,10 @@ const UsedByThisVault = () => {
 };
 
 const UsingThisVault = () => {
+
+    const { projects } = useProjectStore();
+    const usingRows: string[][] = generateUseRows(projects);
+
     return (<div className="w-full flex justify-center text-xl text-left">
         <table style={{borderCollapse: "separate", borderSpacing: "0", borderRadius: "16px", border: "2px solid rgb(0, 50, 50)", width: "90%"}}>
             
@@ -109,13 +117,13 @@ const CollateralTable = () => {
                     style={{ ...buttonStyle, backgroundColor: usedByThisVaultSelected ? "#23384d" : "transparent",}}
                     onClick={() => setUsedByThisValultSelected(true)}>
                     Used by this vault
-                    <span style={{display: "inline-flex", justifyContent: "center", alignItems: "center", fontWeight: "bold", width: "24px", height: "24px", background: "white", borderRadius: "50%", color: "black"}}>6</span>
+                    <span style={{display: "inline-flex", justifyContent: "center", alignItems: "center", fontWeight: "bold", width: "24px", height: "24px", background: "white", borderRadius: "50%", color: "black"}}>2</span>
                 </button>
                 <button
                     style={{...buttonStyle, backgroundColor: usedByThisVaultSelected ? "transparent" : "#23384d",}}
                     onClick={() => setUsedByThisValultSelected(false)}>
                     Using this vault
-                    <span style={{display: "inline-flex", justifyContent: "center", alignItems: "center", fontWeight: "bold", width: "24px", height: "24px", background: "white", borderRadius: "50%", color: "black"}}>4</span>
+                    <span style={{display: "inline-flex", justifyContent: "center", alignItems: "center", fontWeight: "bold", width: "24px", height: "24px", background: "white", borderRadius: "50%", color: "black"}}>1</span>
                 </button>
             </div>
         </div>
