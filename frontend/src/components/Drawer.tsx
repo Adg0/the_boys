@@ -2,12 +2,9 @@ import {
     Drawer,
     DrawerClose,
     DrawerContent,
-    DrawerHeader,
-    DrawerTitle,
     DrawerTrigger,
   } from "@/components/ui/drawer";
 import { X } from 'lucide-react'
-import { Button } from "./ui/button";
 
 
 export default function(){

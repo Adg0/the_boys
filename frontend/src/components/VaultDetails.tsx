@@ -1,5 +1,3 @@
-
-
 import { useLocation } from "react-router-dom";
 import TopGraphics from "./TopGraphics";
 
@@ -29,7 +27,7 @@ const VaultDetails = () => {
 
     const location = useLocation();
     const row = location.state?.row;
-    const [asset, supplyAPY, inWallet, totalSupply, totalBorrow, borrowAPY, utilization] = row;
+    const [asset, supplyAPY, , totalSupply, totalBorrow, borrowAPY, utilization] = row;
 
     const Contents = () => {
         return (<div>
