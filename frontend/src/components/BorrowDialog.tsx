@@ -61,13 +61,13 @@ const BorrowDialog:React.FC<MyComponentProps> = ({product}) => {
                     <input
                         type="number"
                         placeholder="0.0"
-                        style={{width: "200px", height: "52px", color: "black", padding: "4px 8px"}}
+                        style={{width: "200px", height: "52px", color: "black", padding: "4px 8px", borderRadius: "8px"}}
                         className="no-spinner"/>
                 </p>
                 <select
                     value={selectValue}
                     onChange={e => setSelectValue(e.target.value)}
-                    style={{width: "240px", color: "#333", padding: "8px",}}>{
+                    style={{width: "240px", color: "#333", padding: "8px", borderRadius: "8px"}}>{
                     keys.map(key => <option value={key} key={key}>{key}</option>)
                 }</select>
             </div>
@@ -92,7 +92,7 @@ const BorrowDialog:React.FC<MyComponentProps> = ({product}) => {
                     <p>{options[selectValue].healthFactor}</p>
                 </div>
             </div>
-            <div>
+            <div style={{textAlign: "right"}}>
                 <button style={{backgroundColor: "#373", padding: "8px 16px", marginTop: "8px", borderRadius: "8px"}}>{onBorrow ? "Borrow" : "Repay"}</button>
             </div>
         </div>
