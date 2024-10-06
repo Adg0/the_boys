@@ -1,4 +1,5 @@
 import Graphics from "../../images/superhero-cape.png";
+// import Graphics2 from "../../images/graphics.svg";
 import Vaught from '../../images/vaught.png';
 
 interface MyComponentProps {
@@ -41,16 +42,18 @@ const TopGraphics: React.FC<MyComponentProps> = ({ showLogo = true, slogan = "" 
                     justifyContent: "center"}}>
                 <p>{slogan}</p>
             </div>
-			<img
-				src={Graphics}
-				alt='graphics'
+
+			<div 
 				style={{
 					height: '400px',
 					marginLeft: '200px',
 					border: '1px solid rgba(0, 255, 255, 0.05)',
-					opacity: '0.25',
-				}}
-			/>
+					position: "relative",
+				}}>
+					<img style={{height: "400px", opacity: "0.25"}} src={Graphics} alt="graphics" />
+					{/* <img style={{height: "400px", position: "absolute", top: 0, bottom: 0}} src={Graphics2} alt="graphics2" /> */}
+			</div>
+			
 			{showLogo ? (
 				<div className='text-xl'>
 					<img
