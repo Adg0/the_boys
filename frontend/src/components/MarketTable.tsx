@@ -1,12 +1,6 @@
-import Aave from "../../images/aave.png";
-import Alpha from "../../images/alpha_homora.png";
-import Anchor from "../../images/anchor_protocol.jpg";
-import Apostro from "../../images/apostro_lido.png";
-import Badger from "../../images/badger_dao.png";
 import Euler from "../../images/euler_prime_usdc.png";
-import Ren from "../../images/ren_vm.png";
-import Stable from "../../images/stable_coin.png";
-import Sushi from "../../images/sushi_swap.png";
+import Tether from "../../images/tether.png";
+import Ethereum from "../../images/ethereum.svg";
 
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import 'react-circular-progressbar/dist/styles.css';
@@ -19,21 +13,16 @@ import {
 import SupplyDialog from "./SupplyDialog";
 import { DialogTitle } from "@radix-ui/react-dialog";
 import { useNavigate } from "react-router-dom";
+import BorrowDialog from "./BorrowDialog";
 
 type ImageMap = {
     [key: string]: string;
 };
 
 const imageRef: ImageMap = {
-    "Euler Prime USDC": Euler,
-    "Stablecoin Maxi USDC": Stable,
-    "Apostro Lido Ecosystem": Apostro,
-    "Aave": Aave,
-    "SushiSwap": Sushi,
-    "RenVM": Ren,
-    "Anchor Protocol": Anchor,
-    "Badger DAO": Badger,
-    "Alpha Homora": Alpha
+    "USD Coin": Euler,
+    "USD Tether": Tether,
+    "Ethereum": Ethereum,
 };
 
 interface MyComponentProps {
@@ -56,12 +45,12 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                 <thead style={{backgroundColor: "#0c1d2f", color: "#aaa" }}>
                     <tr className="my-4">{
                         headers.map((header, j) => 
-                            <th key={j} className="p-6 py-4" style={{borderRadius: j === 0 ? "16px 0px 0px 0px" : "0px"}}>
+                            <th key={j} className="p-6 py-4 market-heading" style={{borderRadius: j === 0 ? "16px 0px 0px 0px" : "0px"}}>
                                 {header}
                                 {barsIcon}
                             </th>)
                         }
-                        <th className="p-12 py-4" style={{borderRadius: "0px 16px 0px 0px"}}>
+                        <th className="p-6 py-4 market-heading" style={{borderRadius: "0px 16px 0px 0px"}}>
                             <span style={buttonStyle}>Actions</span>
                             {arrowsIcon}
                         </th>
@@ -72,7 +61,9 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                         <tr key={index}>
                             {
                                 row.map((data, i) => 
-                                    <td key={i} style={{borderBottom: "2px solid black", padding: "16px 48px", position: "relative", minWidth: "80px", height: "96px"}}>
+                                    <td key={i}
+                                        className="p-6 py-4 market-data"
+                                        style={{borderBottom: "2px solid black", position: "relative", minWidth: "80px", height: "96px"}}>
                                         {i === 0 ? <img src={imageRef[row[0]]} alt="logo" style={{display: "inline", marginRight: "8px", width:"24px", height: "24px", borderRadius: "50%"}}/> : ""}
                                         <span>{i === 0 ? <button onClick={() => navigate("/vault_details", {state: {row}})}>{data}</button> : data}</span>
                                         {i === 6 ? <div style={{width: "24px", height: "24px", display: "inline-block", position: "absolute", right: "16px"}}>
@@ -80,7 +71,9 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                                         </div> : ""}
                                     </td>)
                             }
-                            <td style={{borderBottom: "2px solid black", padding: "16px 48px",  minWidth: "80px", height: "96px"}}>
+                            <td
+                                className="p-6 py-4 market-data"
+                                style={{borderBottom: "2px solid black", minWidth: "80px", height: "96px"}}>
                                 <span style={{...buttonStyle, border: "1px solid rgba(0, 255, 255, 0.25)", fontSize: "14px", padding: "8px 16px", fontWeight: "bold"}} className="hover:bg-gray-600 text-sm">
                                     <Dialog>
                                         <DialogTrigger>Supply</DialogTrigger>
@@ -90,7 +83,14 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                                         </DialogContent>
                                     </Dialog>
                                 </span>
-                                <span style={{...buttonStyle, border: "1px solid rgba(0, 255, 255, 0.25)", fontSize: "14px", padding: "8px 16px", fontWeight: "bold", marginLeft: "8px"}}>Borrow</span>
+                                <span style={{...buttonStyle, border: "1px solid rgba(0, 255, 255, 0.25)", fontSize: "14px", padding: "8px 16px", fontWeight: "bold", marginLeft: "12px"}} className="hover:bg-gray-600 text-sm">
+                                    <Dialog>
+                                        <DialogTrigger>Borrow</DialogTrigger>
+                                        <DialogContent>
+                                            <BorrowDialog product={row[0]} />
+                                        </DialogContent>
+                                    </Dialog>
+                                </span>
                             </td>
                         </tr>
                     ))

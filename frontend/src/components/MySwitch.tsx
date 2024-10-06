@@ -8,7 +8,7 @@ const MySwitch:React.FC<MyComponentProps> = ({ticked, setTicked}) => {
     return (<div>
         <div>
             <label className="switch">
-            <input type="checkbox" checked={ticked} onChange={e => setTicked(e.target.ticked)} />
+            <input type="checkbox" checked={ticked} onChange={e => setTicked(e.target.checked)} />
             <span className="slider round"></span>
             </label>
         </div>

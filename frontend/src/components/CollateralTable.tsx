@@ -1,40 +1,32 @@
 import { generateUseRows } from "@/helpers/generator";
 import { useState } from "react";
 
-import Aave from "../../images/aave.png";
-import Alpha from "../../images/alpha_homora.png";
-import Anchor from "../../images/anchor_protocol.jpg";
-import Apostro from "../../images/apostro_lido.png";
-import Badger from "../../images/badger_dao.png";
+import useProjectStore from "@/stores/project_store";
+
 import Euler from "../../images/euler_prime_usdc.png";
-import Ren from "../../images/ren_vm.png";
-import Stable from "../../images/stable_coin.png";
-import Sushi from "../../images/sushi_swap.png";
+import Tether from "../../images/tether.png";
+import Ethereum from "../../images/ethereum.svg";
 
 type ImageMap = {
     [key: string]: string;
 };
 
 const imageRef: ImageMap = {
-    "Euler Prime USDC": Euler,
-    "Stablecoin Maxi USDC": Stable,
-    "Apostro Lido Ecosystem": Apostro,
-    "Aave": Aave,
-    "SushiSwap": Sushi,
-    "RenVM": Ren,
-    "Anchor Protocol": Anchor,
-    "Badger DAO": Badger,
-    "Alpha Homora": Alpha
+    "USD Coin": Euler,
+    "USD Tether": Tether,
+    "Ethereum": Ethereum,
 };
 
 const commonHeaders = ["LLTV", "Max LTV", "Vault address"];
 const usedByHeaders = ["Collateral", ...commonHeaders];
 const usingHeaders = ["Lend", ...commonHeaders];
 
-const usedByRows: string[][] = generateUseRows();
-const usingRows: string[][] = generateUseRows();
 
 const UsedByThisVault = () => {
+
+    const { projects } = useProjectStore();
+    const usedByRows: string[][] = generateUseRows(projects);
+
     return (<div className="w-full flex justify-center text-xl text-left">
         <table style={{borderCollapse: "separate", borderSpacing: "0", borderRadius: "16px", border: "2px solid rgb(0, 50, 50)", width: "90%"}}>
             
@@ -70,6 +62,10 @@ const UsedByThisVault = () => {
 };
 
 const UsingThisVault = () => {
+
+    const { projects } = useProjectStore();
+    const usingRows: string[][] = generateUseRows(projects);
+
     return (<div className="w-full flex justify-center text-xl text-left">
         <table style={{borderCollapse: "separate", borderSpacing: "0", borderRadius: "16px", border: "2px solid rgb(0, 50, 50)", width: "90%"}}>
             
@@ -121,13 +117,13 @@ const CollateralTable = () => {
                     style={{ ...buttonStyle, backgroundColor: usedByThisVaultSelected ? "#23384d" : "transparent",}}
                     onClick={() => setUsedByThisValultSelected(true)}>
                     Used by this vault
-                    <span style={{display: "inline-flex", justifyContent: "center", alignItems: "center", fontWeight: "bold", width: "24px", height: "24px", background: "white", borderRadius: "50%", color: "black"}}>6</span>
+                    <span style={{display: "inline-flex", justifyContent: "center", alignItems: "center", fontWeight: "bold", width: "24px", height: "24px", background: "white", borderRadius: "50%", color: "black"}}>2</span>
                 </button>
                 <button
                     style={{...buttonStyle, backgroundColor: usedByThisVaultSelected ? "transparent" : "#23384d",}}
                     onClick={() => setUsedByThisValultSelected(false)}>
                     Using this vault
-                    <span style={{display: "inline-flex", justifyContent: "center", alignItems: "center", fontWeight: "bold", width: "24px", height: "24px", background: "white", borderRadius: "50%", color: "black"}}>4</span>
+                    <span style={{display: "inline-flex", justifyContent: "center", alignItems: "center", fontWeight: "bold", width: "24px", height: "24px", background: "white", borderRadius: "50%", color: "black"}}>1</span>
                 </button>
             </div>
         </div>

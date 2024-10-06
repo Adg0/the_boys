@@ -1,11 +1,13 @@
-import Graphics from '../../images/graphics.svg';
+import Graphics from "../../images/superhero-cape.png";
+// import Graphics2 from "../../images/graphics.svg";
 import Vaught from '../../images/vaught.png';
 
 interface MyComponentProps {
-	showLogo: boolean;
-}
+    showLogo: boolean,
+    slogan: string,
+};
 
-const TopGraphics: React.FC<MyComponentProps> = ({ showLogo = true }) => {
+const TopGraphics: React.FC<MyComponentProps> = ({ showLogo = true, slogan = "" }) => {
 	return (
 		<div
 			style={{
@@ -28,15 +30,30 @@ const TopGraphics: React.FC<MyComponentProps> = ({ showLogo = true }) => {
 					borderRadius: '50%',
 				}}
 			></div>
-			<img
-				src={Graphics}
-				alt='graphics'
+            <div
+                style={{
+                    position: "absolute",
+                    fontSize: "20px",
+                    top: "200px",
+                    left: "650px",
+                    zIndex: "-1",
+                    width: "400px",
+                    display: "flex",
+                    justifyContent: "center"}}>
+                <p>{slogan}</p>
+            </div>
+
+			<div 
 				style={{
 					height: '400px',
 					marginLeft: '200px',
 					border: '1px solid rgba(0, 255, 255, 0.05)',
-				}}
-			/>
+					position: "relative",
+				}}>
+					<img style={{height: "400px", opacity: "0.25"}} src={Graphics} alt="graphics" />
+					{/* <img style={{height: "400px", position: "absolute", top: 0, bottom: 0}} src={Graphics2} alt="graphics2" /> */}
+			</div>
+			
 			{showLogo ? (
 				<div className='text-xl'>
 					<img
@@ -49,7 +66,6 @@ const TopGraphics: React.FC<MyComponentProps> = ({ showLogo = true }) => {
 							width: '160px',
 						}}
 					/>
-					Join the DeFi Revolution (Before It's Over)
 				</div>
 			) : (
 				''

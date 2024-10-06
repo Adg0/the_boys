@@ -1,5 +1,3 @@
-import { Button } from "./ui/button";
-
 import Butcher from "../../images/Butcher.png";
 import Hughie from "../../images/Hughie.png";
 import Frenchie from "../../images/Frenchie.png";

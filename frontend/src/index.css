@@ -107,3 +107,37 @@ tbody{
 .hover-blue-black:hover {
   background-color: #153252;
 }
+
+@media (max-width: 1360px) {
+
+  table{
+    font-size: 16px;
+  }
+
+  th.market-heading{
+    padding: 8px;
+    padding-left: 16px;
+  }
+  
+  td.market-data{
+    padding: 8px;
+    padding-left: 16px;
+  }
+
+}
+
+@media (min-width: 1361px) and (max-width: 1625px) {
+  table{
+    font-size: 18px;
+  }
+
+  th.market-heading{
+    padding: 12px;
+    padding-left: 16px;
+  }
+  
+  td.market-data{
+    padding: 8px;
+    padding-left: 16px;
+  }
+}
