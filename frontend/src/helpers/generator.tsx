@@ -20,7 +20,7 @@ const projects = [
     return `$${(Math.round(money / 10_000) / 100).toLocaleString()}M`;
   };
 
-  export function generateMarketRows(size=10){
+  export function generateMarketRows(size=5){
     const rows: string[][] = [];
     for(let i = 0; i < size; i++){
         const row: string[] = [];
