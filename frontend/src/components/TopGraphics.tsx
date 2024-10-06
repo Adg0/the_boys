@@ -1,4 +1,5 @@
-import Graphics from '../../images/graphics.svg';
+// import Graphics from '../../images/graphics.svg';
+import Graphics from "../../images/superhero-cape.png";
 import Vaught from '../../images/vaught.png';
 
 interface MyComponentProps {
