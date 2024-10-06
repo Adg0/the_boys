@@ -1,4 +1,3 @@
-// import Graphics from '../../images/graphics.svg';
 import Graphics from "../../images/superhero-cape.png";
 import Vaught from '../../images/vaught.png';
 
@@ -49,6 +48,7 @@ const TopGraphics: React.FC<MyComponentProps> = ({ showLogo = true, slogan = "" 
 					height: '400px',
 					marginLeft: '200px',
 					border: '1px solid rgba(0, 255, 255, 0.05)',
+					opacity: '0.25',
 				}}
 			/>
 			{showLogo ? (
