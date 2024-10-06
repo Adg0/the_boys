@@ -45,12 +45,12 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                 <thead style={{backgroundColor: "#0c1d2f", color: "#aaa" }}>
                     <tr className="my-4">{
                         headers.map((header, j) => 
-                            <th key={j} className="p-6 py-4" style={{borderRadius: j === 0 ? "16px 0px 0px 0px" : "0px"}}>
+                            <th key={j} className="p-6 py-4 market-heading" style={{borderRadius: j === 0 ? "16px 0px 0px 0px" : "0px"}}>
                                 {header}
                                 {barsIcon}
                             </th>)
                         }
-                        <th className="p-12 py-4" style={{borderRadius: "0px 16px 0px 0px"}}>
+                        <th className="p-6 py-4 market-heading" style={{borderRadius: "0px 16px 0px 0px"}}>
                             <span style={buttonStyle}>Actions</span>
                             {arrowsIcon}
                         </th>
@@ -61,7 +61,9 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                         <tr key={index}>
                             {
                                 row.map((data, i) => 
-                                    <td key={i} style={{borderBottom: "2px solid black", padding: "16px 48px", position: "relative", minWidth: "80px", height: "96px"}}>
+                                    <td key={i}
+                                        className="p-6 py-4 market-data"
+                                        style={{borderBottom: "2px solid black", position: "relative", minWidth: "80px", height: "96px"}}>
                                         {i === 0 ? <img src={imageRef[row[0]]} alt="logo" style={{display: "inline", marginRight: "8px", width:"24px", height: "24px", borderRadius: "50%"}}/> : ""}
                                         <span>{i === 0 ? <button onClick={() => navigate("/vault_details", {state: {row}})}>{data}</button> : data}</span>
                                         {i === 6 ? <div style={{width: "24px", height: "24px", display: "inline-block", position: "absolute", right: "16px"}}>
@@ -69,7 +71,9 @@ const MarketTable: React.FC<MyComponentProps> = ({headers, rows}) => {
                                         </div> : ""}
                                     </td>)
                             }
-                            <td style={{borderBottom: "2px solid black", padding: "16px 48px",  minWidth: "80px", height: "96px"}}>
+                            <td
+                                className="p-6 py-4 market-data"
+                                style={{borderBottom: "2px solid black", minWidth: "80px", height: "96px"}}>
                                 <span style={{...buttonStyle, border: "1px solid rgba(0, 255, 255, 0.25)", fontSize: "14px", padding: "8px 16px", fontWeight: "bold"}} className="hover:bg-gray-600 text-sm">
                                     <Dialog>
                                         <DialogTrigger>Supply</DialogTrigger>
