@@ -1,76 +1,27 @@
 import { useEffect, useState } from "react";
-import {
-  useBalance,
-  useConnectUI,
-  useIsConnected,
-  useWallet,
-} from "@fuels/react";
+
 import { CompV, Oracle, Src6VaultConnector } from "../sway-api";
 import { arrayify, BigNumberish, BN, hexlify } from "fuels";
 import { useToast } from "@/hooks/use-toast";
+import { useGlobalStore, useSetupContracts } from "@/hooks/use-contracts";
 
-const ASSET_ID = import.meta.env.VITE_ASSET_ID;
-const COMPV_ID = import.meta.env.VITE_COMP_V_ID;
-const VAULT_ID = import.meta.env.VITE_VAULT_ID;
-const ORACLE_ID = import.meta.env.VITE_ORACLE_ID;
 
 export default function(){
   const {toast} = useToast()
-  const [compv, setCompv] = useState<CompV>();
-  const [assetLib, setAssetLib] = useState<CompV>();
-  const [vault, setVault] = useState<Src6VaultConnector>();
-  const [oracle, setOracle] = useState<Oracle>()
-  const [shares, setShares] = useState<number>()
-  const [totalAssets, setTotalAssets] = useState<number>();
-  const { connect, isConnecting } = useConnectUI();
-  const { isConnected } = useIsConnected();
-  const { wallet } = useWallet();
-  const { balance } = useBalance({
-    address: wallet?.address.toAddress(),
-    assetId: wallet?.provider.getBaseAssetId(),
-  });
-
-  useEffect(() => {
-    async function getInitialAssets() {
-      if (isConnected && wallet) {
-        const assetContract = new CompV(
-          ASSET_ID,
-          wallet
-        );
-        setAssetLib(assetContract);
-
-        const compvContract = new CompV(
-          COMPV_ID,
-          wallet
-        );
-        await getTotalAssets(assetContract);
-        setCompv(compvContract);
-
-        const oracleContract = new Oracle(
-          ORACLE_ID,
-          wallet
-        )
-        setOracle(oracleContract)
-
-        const vaultContract = new Src6VaultConnector(
-          VAULT_ID,
-          wallet
-        )
-        setVault(vaultContract)
-      }
-    }
- 
-    getInitialAssets();
-  }, [isConnected, wallet]);
-
-  const getTotalAssets = async (compvContract: CompV) => {
-    try {
-      const { value } = await compvContract.functions.total_assets().get();
-      setTotalAssets(value.toNumber());
-    } catch (error) {
-      console.error(error);
-    }
-  };
+  const { connect, isConnecting, isConnected, wallet, balance } = useSetupContracts();
+  const {
+    setShares,
+    setCompv,
+    setAssetLib,
+    setVault,
+    setOracle,
+    setTotalAssets,
+    reset,
+    compv,
+    assetLib,
+    vault,
+    totalAssets
+  } = useGlobalStore();
 
   const depositAsset = async (amount: BN, assetId: string) => {
     if (!vault) {
@@ -214,6 +165,15 @@ export default function(){
     }
   };
 
+  const getTotalAssets = async (compvContract: CompV) => {
+    try {
+      const { value } = await compvContract.functions.total_assets().get();
+      setTotalAssets(value.toNumber());
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const getSender = () => {
     if (!wallet) return alert("Wallet not connected")
       const addressInput = {bits: wallet.address.toB256()}
@@ -222,61 +182,50 @@ export default function(){
       return addressIdentityInput
   }
 
+  return (
+    <div style={styles.root}>
+      <div style={styles.container}>
+        {isConnected ? (
+          <>
+            <h3 style={styles.label}>CompV</h3>
+            <div style={styles.counter}>{totalAssets ?? 0}</div>
 
-    return (<div style={styles.root}>
-        <div style={styles.container}>
-          {isConnected ? (
-            <>
-              <h3 style={styles.label}>CompV</h3>
-              <div style={styles.counter}>{totalAssets ?? 0}</div>
-   
-              {balance && balance.toNumber() === 0 ? (
-                <p>
-                  Get testnet funds from the{" "}
-                  <a
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    href={`https://faucet-testnet.fuel.network/?address=${wallet?.address.toAddress()}`}
-                  >
-                    Fuel Faucet
-                  </a>{" "}
-                  to increment the counter.
-                </p>
-              ) : (
-                <div>
-                  <p>Balance: {balance?.toNumber()}</p>
-                  {/* <button onClick={mint} style={styles.button}>
-                    Mint CompV
-                  </button> */}
-                  <button style={styles.button} onClick={async ()=>await depositAsset(new BN(1000),"0x1298fadaa13d3203c686f4f7b4a110d9b5e01ef30a5eed39bc8d439d68106eab")}>
-                    Deposit 1k
-                  </button>
-                  <button style={styles.button} onClick={async () => await depositCollateral(new BN(1000), "0x1298fadaa13d3203c686f4f7b4a110d9b5e01ef30a5eed39bc8d439d68106eab")}>
-                    DepositCollateral 1k
-                  </button>
-                  <button style={styles.button} onClick={async () => await borrowAsset(new BN(100), "0x1298fadaa13d3203c686f4f7b4a110d9b5e01ef30a5eed39bc8d439d68106eab", "0x84e5f0e47a98492fb297a607d53e1f3a8e564274b8fd5afa6e53772dd413455a")}>
-                    Borrow 100
-                  </button>
-                </div>
-              )}
-   
-              <p>Your Fuel Wallet address is:</p>
-              <p>{wallet?.address.toAddress()}</p>
-            </>
-          ) : (
-            <button
-              onClick={() => {
-                connect();
-              }}
-              style={styles.button}
-            >
-              {isConnecting ? "Connecting" : "Connect"}
-            </button>
-          )}
-        </div>
+            {balance && balance.toNumber() === 0 ? (
+              <p>
+                Get testnet funds from the{" "}
+                <a
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  href={`https://faucet-testnet.fuel.network/?address=${wallet?.address.toAddress()}`}
+                >
+                  Fuel Faucet
+                </a>{" "}
+                to increment the counter.
+              </p>
+            ) : (
+              <div>
+                <p>Balance: {balance?.toNumber()}</p>
+                <button
+                  style={styles.button}
+                  onClick={async () => await depositAsset(new BN(1000), "0x1298fadaa13d3203c686f4f7b4a110d9b5e01ef30a5eed39bc8d439d68106eab")}
+                >
+                  Deposit 1k
+                </button>
+              </div>
+            )}
+
+            <p>Your Fuel Wallet address is:</p>
+            <p>{wallet?.address.toAddress()}</p>
+          </>
+        ) : (
+          <button onClick={connect} style={styles.button}>
+            {isConnecting ? "Connecting" : "Connect"}
+          </button>
+        )}
       </div>
-    );
-  }
+    </div>
+  );
+};
    
   const styles = {
     root: {

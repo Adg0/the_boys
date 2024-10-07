@@ -4,6 +4,11 @@ import useProjectStore from "@/stores/project_store";
 
 import MySwitch from "./MySwitch";
 
+import { arrayify, BigNumberish, BN, hexlify } from "fuels";
+import { useToast } from "@/hooks/use-toast";
+import { useGlobalStore, useSetupContracts } from "@/hooks/use-contracts";
+
+
 interface MyComponentProps {
     product: string,
 };
@@ -15,6 +20,120 @@ const SupplyDialog:React.FC<MyComponentProps> = ({product}) => {
 
     const { options } = useProjectStore();
     const keys: string[] = Object.keys(options);
+
+    const [inputValue, setInputValue] = useState<number | string>("");
+
+    const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        const value = e.target.value;
+        setInputValue(value === "" ? "" : parseFloat(value));
+    };
+
+    const {toast} = useToast()
+    const { connect, isConnecting, isConnected, wallet, balance } = useSetupContracts();
+    const {
+        setShares,
+        setCompv,
+        setAssetLib,
+        setVault,
+        setOracle,
+        setTotalAssets,
+        reset,
+        compv,
+        assetLib,
+        vault,
+        totalAssets
+    } = useGlobalStore();
+
+    const depositAsset = async (amount: BN, assetId: string) => {
+        if (!vault) {
+        return alert("Contract not loaded");
+        }
+        try {
+        let assets = await wallet!.getBalances();
+        console.log(assets);
+        
+        const addressIdentityInput = getSender();
+        const vault_sub_id: Uint8Array = new Uint8Array(32).fill(1);
+        const subId: string = hexlify(vault_sub_id);
+
+        // const response  = await vault.functions.max_depositable(addressIdentityInput!, {bits: assetId},subId)
+        const response  = await vault.functions
+        .deposit(addressIdentityInput!,subId)//{bits: assetId},
+        .txParams({ 
+            variableOutputs: 1,
+        })
+        .callParams({
+            forward: {
+            amount: amount,
+            assetId: arrayify(assetId),
+            },
+        })
+        .call();
+
+        const share = await response.waitForResult();
+        console.log(share);
+        setShares(share.value.toNumber());
+        toast({
+                title: 'Transaction Success',
+                description: response.transactionId,
+                variant: 'online'
+            });
+        } catch (error) {
+        console.error(error);
+        }
+    }
+
+    const depositCollateral = async (amount: BN, assetId: string) => {
+        if (!vault) {
+        return alert("Contract not loaded");
+        }
+        try {
+        let assets = await wallet!.getBalances();
+        console.log(assets);
+        
+        const addressIdentityInput = getSender();      
+
+        // const response  = await vault.functions.max_depositable(addressIdentityInput!, {bits: assetId},subId)
+        const response  = await vault.functions
+        .deposit_collateral(addressIdentityInput!)//{bits: assetId},
+        .txParams({ 
+            variableOutputs: 1,
+        })
+        .callParams({
+            forward: {
+            amount: amount,
+            assetId: arrayify(assetId),
+            },
+        })
+        .call();
+
+        const deposited = await response.waitForResult();
+        console.log(deposited);
+        setShares(deposited.value.toNumber());
+        toast({
+                title: 'Transaction Success',
+                description: response.transactionId,
+                variant: 'online'
+            });
+        } catch (error) {
+        console.error(error);
+        }
+    }
+
+    const getSender = () => {
+        if (!wallet) return alert("Wallet not connected")
+        const addressInput = {bits: wallet.address.toB256()}
+        const addressIdentityInput = { Address: addressInput };
+
+        return addressIdentityInput
+    }
+
+    const HandleSupply = async () => {
+        if (useCollateralChecked) return await depositCollateral(new BN(inputValue), "0x1298fadaa13d3203c686f4f7b4a110d9b5e01ef30a5eed39bc8d439d68106eab");
+        
+        return await depositAsset(new BN(inputValue), "0x1298fadaa13d3203c686f4f7b4a110d9b5e01ef30a5eed39bc8d439d68106eab")
+    }
+
 
     return (<div style={{fontSize: "28px"}}>
         <div style={{display: "flex", justifyContent: "end", alignItems: "center", }}>
@@ -29,7 +148,10 @@ const SupplyDialog:React.FC<MyComponentProps> = ({product}) => {
                         type="number"
                         placeholder="0.0"
                         style={{width: "200px", height: "52px", color: "black", padding: "4px 8px", borderRadius: "8px"}}
-                        className="no-spinner"/>
+                        className="no-spinner"
+                        value={inputValue}
+                        onChange={handleInputChange}
+                        />
                 </p>
                 <select
                     value={selectValue}
@@ -60,7 +182,7 @@ const SupplyDialog:React.FC<MyComponentProps> = ({product}) => {
                 </div>
             </div>
             <div style={{textAlign: "right"}}>
-                <button style={{backgroundColor: "#373", padding: "8px 16px", marginTop: "8px", borderRadius: "8px"}}>Supply</button>
+                <button style={{backgroundColor: "#373", padding: "8px 16px", marginTop: "8px", borderRadius: "8px"}} onClick={HandleSupply}>Supply</button>
             </div>
         </div>
     </div>);
