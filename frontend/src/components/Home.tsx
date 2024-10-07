@@ -4,6 +4,7 @@ import { generateMarketRows } from "@/helpers/generator";
 import MarketTable from "./MarketTable";
 import TopGraphics from "./TopGraphics";
 import Drawer from "./Drawer";
+// import IntegrationTester from "./IntegrationTester"
 
 import useProjectStore from "@/stores/project_store";
 
@@ -19,6 +20,7 @@ export default function Home(){
             <Drawer />
             <TopGraphics showLogo={true} slogan="Join the DeFi Revolution (Before It's Over)" />
             <MarketTable rows={rows} headers={headers} />
+            {/* <IntegrationTester /> */}
         </div>
     );
 }
