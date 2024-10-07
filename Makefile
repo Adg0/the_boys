@@ -21,6 +21,9 @@ build-oracle: ## builds Oracle contract
 build-src-6-vault-connector: ## builds Vault-Connector contract
 	cd contracts/src-6-vault-connector && forc build
 
+build_frontend: ## builds the frontend
+	cd frontend && npm i && npm run build
+
 -----------------------------: ## 
 _____HELPER_____: ## 
 cp-build-out: ## copies comp-v, oracle build for vault-connector
