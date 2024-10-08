@@ -1,0 +1,21 @@
+[package]
+name = "oracle-node"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+anyhow = "1.0.89"
+async-trait = "0.1.83"
+dotenv = "0.15.0"
+fuels = "0.66.7"
+# fuels = { version = "0.66.7", features = ["fuel-core-lib"] }
+futures = "0.3.31"
+itertools = "0.13.0"
+reqwest = { version = "0.12.8", features = ["json"] }
+serde = { version = "1.0.210", features = ["derive"] }
+tokio = { version = "1.40.0", features = ["full"] }
+
+[[test]]
+harness = true
+name = "integration_tests"
+path = "tests/harness.rs"
