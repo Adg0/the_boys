@@ -80,6 +80,28 @@ impl SRC6VaultConnector for Contract {
         );
     }
 
+    fn setasset_compv(contract_id: ContractId) {
+        let asset_id = msg_asset_id();
+
+        // let compv_contract_id: b256 = COMPV_CONTRACT_ID.into();
+
+        let compv_contract = abi(Compv, contract_id.bits());
+
+        let name = String::from_ascii_str("Compound V");
+        compv_contract.set_name(asset_id,name);
+
+        let symbol = String::from_ascii_str("COMPV");
+        compv_contract.set_symbol(asset_id, symbol);
+
+        let decimals = 9u8;
+        compv_contract.set_decimals(asset_id, decimals);
+
+        require(compv_contract.name(asset_id) == Some(name), "Failed to set_name");
+        require(compv_contract.symbol(asset_id) == Some(symbol), "Failed to set_symbol");
+        require(compv_contract.decimals(asset_id) == Some(decimals), "Failed to set_decimals");
+        
+    }
+
     #[payable]
     #[storage(read, write)]
     fn deposit_collateral(user: Identity) -> u64 {

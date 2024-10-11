@@ -4,6 +4,8 @@ abi SRC6VaultConnector {
     #[storage(read, write)]
     fn configure_compv(contract_id: ContractId);
 
+    fn setasset_compv(contract_id: ContractId);
+
     #[payable]
     #[storage(read, write)]
     fn deposit_collateral(user: Identity) -> u64;
