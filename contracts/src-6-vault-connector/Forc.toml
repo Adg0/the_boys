@@ -7,4 +7,5 @@ name = "src-6-vault-connector"
 [dependencies]
 asset_lib = { path = "../asset_lib" }
 oracle_lib = { path = "../oracle_lib" }
+pyth_interface = { git = "https://github.com/pyth-network/pyth-crosschain", tag = "pyth-fuel-contract-v0.5.0" }
 standards = { git = "https://github.com/FuelLabs/sway-standards", tag = "v0.6.1" }

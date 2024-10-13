@@ -7,6 +7,7 @@ use interface::*;
 
 use std::{
     asset::transfer,
+    bytes::Bytes,
     call_frames::msg_asset_id,
     constants::DEFAULT_SUB_ID,
     context::{
@@ -25,6 +26,7 @@ use standards::{src20::SRC20, src5::{SRC5, State}, src6::{Deposit, SRC6, Withdra
 
 use oracle_lib::*;
 use asset_lib::*;
+use pyth_interface::{data_structures::price::{Price, PriceFeedId}, PythCore};
 
 storage {
     /// Vault share AssetId -> VaultInfo.
@@ -48,15 +50,21 @@ storage {
 /// The compv ContractId of this contract at deployment.
 #[allow(dead_code)]
 const INITIAL_COMPV: ContractId = ContractId::from(0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03);
-
+const INITIAL_PYTH_ID: ContractId = ContractId::from(0x1ab91bc1402a187055d3e827017ace566a103ce2a4126517da5d656d6a436aea); // Testnet Contract
 configurable {
     /// Oracle contract
-    ORACLE_CONTRACT_ID: ContractId = ContractId::from(0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03),
+    PYTH_CONTRACT_ID: ContractId = INITIAL_PYTH_ID,
     COMPV_CONTRACT_ID: ContractId = INITIAL_COMPV,
     TEMPV_CONTRACT_ID: ContractId = ContractId::from(0x3ede62568a4600582c79d99abdddab8f625caed77454fc088856ebb086496c03),
 }
 
 impl SRC6VaultConnector for Contract {
+    fn get_price(price_feed_id: PriceFeedId) -> Price {
+        let pyth_contract = abi(PythCore, PYTH_CONTRACT_ID);
+        let price = pyth_contract.price(price_feed_id);
+        price
+    }
+
     #[storage(read, write)]
     fn configure_compv(contract_id: ContractId) {
         let owner = Identity::ContractId(ContractId::this());
@@ -88,7 +96,7 @@ impl SRC6VaultConnector for Contract {
         let compv_contract = abi(Compv, contract_id.bits());
 
         let name = String::from_ascii_str("Compound V");
-        compv_contract.set_name(asset_id,name);
+        compv_contract.set_name(asset_id, name);
 
         let symbol = String::from_ascii_str("COMPV");
         compv_contract.set_symbol(asset_id, symbol);
@@ -96,10 +104,21 @@ impl SRC6VaultConnector for Contract {
         let decimals = 9u8;
         compv_contract.set_decimals(asset_id, decimals);
 
-        require(compv_contract.name(asset_id) == Some(name), "Failed to set_name");
-        require(compv_contract.symbol(asset_id) == Some(symbol), "Failed to set_symbol");
-        require(compv_contract.decimals(asset_id) == Some(decimals), "Failed to set_decimals");
-        
+        require(
+            compv_contract
+                .name(asset_id) == Some(name),
+            "Failed to set_name",
+        );
+        require(
+            compv_contract
+                .symbol(asset_id) == Some(symbol),
+            "Failed to set_symbol",
+        );
+        require(
+            compv_contract
+                .decimals(asset_id) == Some(decimals),
+            "Failed to set_decimals",
+        );
     }
 
     #[payable]

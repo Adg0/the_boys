@@ -1,6 +1,8 @@
 library;
 
 abi SRC6VaultConnector {
+    fn get_price(price_feed_id: PriceFeedId) -> Price;
+
     #[storage(read, write)]
     fn configure_compv(contract_id: ContractId);
 
